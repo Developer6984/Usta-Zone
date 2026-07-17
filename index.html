@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="uz" data-theme="dark">
+<html lang="uz" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#171717">
+<meta name="theme-color" content="#F4F5F3">
 <title>Usta Zone — Ustalar bozori</title>
 <meta name="description" content="Toshkent va butun O'zbekiston bo'ylab ishonchli ustalarni toping yoki o'z xizmatingizni e'lon qiling.">
 
@@ -30,10 +30,884 @@
   }
 
   *{box-sizing:border-box;}
+  a{color:inherit;text-decoration:none;}
 
   /* ================================================================
      UTILITY LAYER — fayl to'liq mustaqil bo'lishi uchun Tailwind CDN
      olib tashlandi. Yuqorida HTML/JS ichida ishlatilgan har bir klass
+     shu yerda qo'lda CSS sifatida yozilgan (attribute selektor orqali,
+     shunda "w-[168px]" kabi maxsus belgili nomlar ham ishlaydi).
+     ================================================================ */
+  [class~="flex"]{display:flex;}
+  [class~="flex-1"]{flex:1 1 0%;}
+  [class~="flex-col"]{flex-direction:column;}
+  [class~="grid"]{display:grid;}
+  [class~="grid-cols-2"]{grid-template-columns:repeat(2,minmax(0,1fr));}
+  [class~="grid-cols-3"]{grid-template-columns:repeat(3,minmax(0,1fr));}
+  [class~="items-center"]{align-items:center;}
+  [class~="items-end"]{align-items:flex-end;}
+  [class~="justify-between"]{justify-content:space-between;}
+  [class~="justify-center"]{justify-content:center;}
+  [class~="block"]{display:block;}
+  [class~="inline"]{display:inline;}
+  [class~="inline-block"]{display:inline-block;}
+  [class~="hidden"]{display:none;}
+  [class~="relative"]{position:relative;}
+  [class~="absolute"]{position:absolute;}
+  [class~="fixed"]{position:fixed;}
+  [class~="sticky"]{position:sticky;}
+  [class~="overflow-hidden"]{overflow:hidden;}
+  [class~="overflow-x-auto"]{overflow-x:auto;}
+  [class~="pointer-events-none"]{pointer-events:none;}
+  [class~="cursor-pointer"]{cursor:pointer;}
+  [class~="min-w-0"]{min-width:0;}
+  [class~="shrink-0"]{flex-shrink:0;}
+  [class~="truncate"]{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  [class~="text-center"]{text-align:center;}
+  [class~="text-left"]{text-align:left;}
+  [class~="uppercase"]{text-transform:uppercase;}
+  [class~="tracking-wide"]{letter-spacing:.025em;}
+  [class~="resize-none"]{resize:none;}
+  [class~="mx-auto"]{margin-left:auto;margin-right:auto;}
+  [class~="w-full"]{width:100%;}
+  [class~="max-w-lg"]{max-width:32rem;}
+
+  [class~="top-0"]{top:0;}
+  [class~="bottom-0"]{bottom:0;}
+  [class~="inset-x-0"]{left:0;right:0;}
+  [class~="left-3.5"]{left:14px;}
+  [class~="right-2"]{right:8px;}
+  [class~="right-6"]{right:24px;}
+  [class~="top-2"]{top:8px;}
+  [class~="top-1/2"]{top:50%;}
+  [class~="-translate-y-1/2"]{transform:translateY(-50%);}
+  [class~="z-40"]{z-index:40;}
+
+  [class~="gap-1"]{gap:4px;} [class~="gap-1.5"]{gap:6px;} [class~="gap-2"]{gap:8px;}
+  [class~="gap-2.5"]{gap:10px;} [class~="gap-3"]{gap:12px;} [class~="gap-3.5"]{gap:14px;}
+
+  [class~="p-1.5"]{padding:6px;} [class~="p-2"]{padding:8px;} [class~="p-3"]{padding:12px;}
+  [class~="p-3.5"]{padding:14px;} [class~="p-5"]{padding:20px;}
+
+  [class~="mb-1.5"]{margin-bottom:6px;} [class~="mb-2"]{margin-bottom:8px;} [class~="mb-2.5"]{margin-bottom:10px;}
+  [class~="mb-3"]{margin-bottom:12px;} [class~="mb-4"]{margin-bottom:16px;} [class~="mb-5"]{margin-bottom:20px;} [class~="mb-6"]{margin-bottom:24px;}
+  [class~="mt-0.5"]{margin-top:2px;} [class~="mt-1"]{margin-top:4px;} [class~="mt-1.5"]{margin-top:6px;}
+  [class~="mt-2"]{margin-top:8px;} [class~="mt-2.5"]{margin-top:10px;} [class~="mt-auto"]{margin-top:auto;}
+  [class~="ml-2"]{margin-left:8px;} [class~="ml-7"]{margin-left:28px;}
+  [class~="-ml-2"]{margin-left:-8px;} [class~="-mt-7"]{margin-top:-28px;}
+  [class~="my-3"]{margin-top:12px;margin-bottom:12px;} [class~="my-4"]{margin-top:16px;margin-bottom:16px;}
+
+  [class~="px-1"]{padding-left:4px;padding-right:4px;} [class~="px-2"]{padding-left:8px;padding-right:8px;}
+  [class~="px-2.5"]{padding-left:10px;padding-right:10px;} [class~="px-3.5"]{padding-left:14px;padding-right:14px;}
+  [class~="px-4"]{padding-left:16px;padding-right:16px;} [class~="px-5"]{padding-left:20px;padding-right:20px;}
+  [class~="py-0.5"]{padding-top:2px;padding-bottom:2px;} [class~="py-1"]{padding-top:4px;padding-bottom:4px;}
+  [class~="py-1.5"]{padding-top:6px;padding-bottom:6px;} [class~="py-16"]{padding-top:64px;padding-bottom:64px;}
+  [class~="py-2"]{padding-top:8px;padding-bottom:8px;} [class~="py-2.5"]{padding-top:10px;padding-bottom:10px;}
+  [class~="py-3"]{padding-top:12px;padding-bottom:12px;} [class~="py-3.5"]{padding-top:14px;padding-bottom:14px;}
+  [class~="py-4"]{padding-top:16px;padding-bottom:16px;}
+  [class~="pt-2"]{padding-top:8px;} [class~="pt-3"]{padding-top:12px;} [class~="pt-4"]{padding-top:16px;}
+  [class~="pb-1"]{padding-bottom:4px;} [class~="pb-6"]{padding-bottom:24px;} [class~="pb-28"]{padding-bottom:112px;}
+  [class~="pb-[calc(env(safe-area-inset-bottom)+8px)]"]{padding-bottom:calc(env(safe-area-inset-bottom) + 8px);}
+  [class~="pl-11"]{padding-left:44px;}
+
+  [class~="space-y-2.5"] > * + *{margin-top:10px;}
+  [class~="space-y-4"] > * + *{margin-top:16px;}
+
+  [class~="w-1.5"]{width:6px;} [class~="h-1.5"]{height:6px;}
+  [class~="w-2"]{width:8px;} [class~="h-2"]{height:8px;}
+  [class~="w-11"]{width:44px;} [class~="h-11"]{height:44px;}
+  [class~="w-12"]{width:48px;} [class~="h-12"]{height:48px;}
+  [class~="w-14"]{width:56px;} [class~="h-14"]{height:56px;}
+  [class~="w-16"]{width:64px;} [class~="h-16"]{height:64px;}
+  [class~="w-[168px]"]{width:168px;}
+
+  [class~="border"]{border-width:1px;border-style:solid;}
+  [class~="border-2"]{border-width:2px;border-style:solid;}
+  [class~="border-b"]{border-bottom-width:1px;border-bottom-style:solid;}
+  [class~="border-t"]{border-top-width:1px;border-top-style:solid;}
+  [class~="border-dashed"]{border-style:dashed;}
+
+  [class~="rounded-2xl"]{border-radius:16px;} [class~="rounded-full"]{border-radius:9999px;}
+  [class~="rounded-lg"]{border-radius:8px;} [class~="rounded-xl"]{border-radius:12px;}
+
+  [class~="text-2xl"]{font-size:24px;line-height:1.3;} [class~="text-lg"]{font-size:18px;line-height:1.4;}
+  [class~="text-sm"]{font-size:14px;line-height:1.45;} [class~="text-xs"]{font-size:12px;line-height:1.4;}
+  [class~="text-[10px]"]{font-size:10px;line-height:1.4;} [class~="text-[11px]"]{font-size:11px;line-height:1.4;}
+  [class~="font-bold"]{font-weight:700;} [class~="font-medium"]{font-weight:500;}
+  [class~="font-normal"]{font-weight:400;} [class~="font-semibold"]{font-weight:600;}
+  [class~="font-sans"]{font-family:var(--font-body);}
+
+  html,body{margin:0;padding:0;}
+  :root{
+    --font-body:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    --font-mono:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;
+  }
+  body{
+    background:var(--bg); color:var(--text); font-family:var(--font-body);
+    -webkit-font-smoothing:antialiased; transition:background-color .25s ease,color .25s ease;
+  }
+  .font-display{font-family:var(--font-body);font-weight:700;letter-spacing:-.01em;}
+  .font-mono{font-family:var(--font-mono);}
+
+  /* semantic color utilities driven by the theme tokens above */
+  .bg-app{background:var(--bg);} .bg-elevated{background:var(--bg-elevated);} .bg-card{background:var(--bg-card);}
+  .border-app{border-color:var(--border);} .text-main{color:var(--text);} .text-muted{color:var(--text-muted);}
+  .text-faint{color:var(--text-faint);} .text-accent{color:var(--accent);} .bg-accent{background:var(--accent);}
+  .text-gold{color:var(--gold);} .border-gold{border-color:var(--gold);} .border-accent{border-color:var(--accent);}
+
+  .app-shell{max-width:32rem;margin:0 auto;min-height:100vh;position:relative;background:var(--bg);}
+  @media (min-width:641px){
+    body{background:#0A0A0A;}
+    .app-shell{box-shadow:0 0 90px rgba(0,0,0,.55);border-left:1px solid var(--border);border-right:1px solid var(--border);}
+  }
+
+  .no-scrollbar::-webkit-scrollbar{display:none;}
+  .no-scrollbar{-ms-overflow-style:none;scrollbar-width:none;}
+
+  .page{display:none;}
+  .page.active{display:block;animation:fadeSlide .3s ease;}
+  @keyframes fadeSlide{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+  @media (prefers-reduced-motion:reduce){
+    .page.active{animation:none;}
+    *{transition-duration:.01ms !important;animation-duration:.01ms !important;}
+  }
+
+  #drawer{position:fixed;top:0;left:0;height:100%;width:82%;max-width:320px;transform:translateX(-105%);
+    transition:transform .3s ease;z-index:60;background:var(--bg-elevated);border-right:1px solid var(--border);overflow-y:auto;}
+  #drawer.open{transform:translateX(0);}
+  #drawerOverlay{position:fixed;inset:0;background:var(--overlay);opacity:0;pointer-events:none;transition:opacity .3s ease;z-index:55;}
+  #drawerOverlay.open{opacity:1;pointer-events:auto;}
+
+  .seal{width:52px;height:52px;border-radius:9999px;border:2px dashed var(--gold);display:flex;align-items:center;justify-content:center;
+    transform:rotate(-10deg);background:rgba(245,185,66,.1);position:absolute;top:-10px;left:-10px;z-index:2;}
+  .seal span{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:9px;color:var(--gold);letter-spacing:.05em;}
+
+  .card{transition:transform .2s ease,border-color .2s ease;}
+  @media (hover:hover){.card:hover{transform:translateY(-3px);border-color:var(--accent);}}
+
+  a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,label:focus-within{
+    outline:2px solid var(--accent);outline-offset:2px;
+  }
+
+  .switch{width:44px;height:26px;border-radius:9999px;background:var(--border);position:relative;transition:background .2s ease;flex-shrink:0;cursor:pointer;border:none;}
+  .switch::after{content:'';position:absolute;top:2px;left:2px;width:22px;height:22px;border-radius:9999px;background:var(--bg-elevated);
+    transition:transform .2s ease;box-shadow:0 1px 3px rgba(0,0,0,.4);}
+  .switch.on{background:var(--accent);}
+  .switch.on::after{transform:translateX(18px);}
+
+  .chip{white-space:nowrap;border:1px solid var(--border);transition:background .15s ease,color .15s ease,border-color .15s ease;}
+  .chip.active{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);}
+
+  .boost-option{border:1px solid var(--border);transition:border-color .15s ease,background .15s ease;}
+  .boost-option.selected{border-color:var(--accent);background:rgba(33,241,168,.06);}
+
+  .setting-row:not(:last-child){border-bottom:1px solid var(--border);}
+
+  .lang-pill{transition:background .15s ease,color .15s ease,border-color .15s ease;}
+  .lang-pill.active{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);}
+
+  input[type="radio"]{accent-color:var(--accent);}
+
+  #toastWrap{position:fixed;left:0;right:0;bottom:88px;display:flex;justify-content:center;pointer-events:none;z-index:80;padding:0 24px;}
+  #toast{background:var(--bg-elevated);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:10px 16px;
+    font-size:13px;font-family:var(--font-body);box-shadow:0 8px 24px rgba(0,0,0,.35);opacity:0;transform:translateY(8px);
+    transition:opacity .25s ease,transform .25s ease;max-width:100%;text-align:center;}
+  #toast.show{opacity:1;transform:translateY(0);}
+</style>
+</head>
+<body>
+
+<!-- =====================================================================
+     SIDE DRAWER
+     ===================================================================== -->
+<div id="drawerOverlay" onclick="closeDrawer()"></div>
+<aside id="drawer" class="p-5 flex flex-col">
+  <div class="flex items-center justify-between mb-6">
+    <div class="flex items-center gap-1"><span class="font-display font-bold text-main">USTA</span><span class="font-display font-bold text-accent">ZONE</span></div>
+    <button type="button" onclick="closeDrawer()" aria-label="Yopish" class="p-1.5 text-muted"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+
+  <div class="flex items-center gap-3 mb-6 pb-6 border-b border-app">
+    <div class="w-11 h-11 rounded-full bg-card border border-app flex items-center justify-center font-display font-bold text-accent text-sm">AQ</div>
+    <div>
+      <p class="text-sm font-medium text-main">Aziz Qodirov</p>
+      <button type="button" onclick="switchTab('profile');closeDrawer()" class="text-xs text-accent" data-i18n="drawerViewProfile"></button>
+    </div>
+  </div>
+
+  <nav class="flex flex-col gap-1 text-sm">
+    <button type="button" onclick="switchTab('home');closeDrawer()" class="flex items-center gap-3 px-2 py-2.5 rounded-lg text-main">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V10"/></svg>
+      <span data-i18n="navHome"></span>
+    </button>
+    <button type="button" onclick="switchTab('post');closeDrawer()" class="flex items-center gap-3 px-2 py-2.5 rounded-lg text-main">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="12" y1="8" x2="12" y2="16"/></svg>
+      <span data-i18n="drawerListings"></span>
+    </button>
+    <button type="button" onclick="showSaved()" class="flex items-center gap-3 px-2 py-2.5 rounded-lg text-main">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <span data-i18n="drawerFav"></span>
+    </button>
+  </nav>
+
+  <div class="my-4 border-t border-app"></div>
+  <p data-i18n="settingsLanguage" class="text-xs font-semibold text-faint uppercase tracking-wide mb-2 px-2"></p>
+  <div class="flex gap-2 px-2 mb-2">
+    <button type="button" onclick="setLang('uz')" data-lang-btn="uz" class="lang-pill text-xs font-mono px-2.5 py-1.5 rounded-lg border border-app flex-1 text-main">UZ</button>
+    <button type="button" onclick="setLang('ru')" data-lang-btn="ru" class="lang-pill text-xs font-mono px-2.5 py-1.5 rounded-lg border border-app flex-1 text-main">RU</button>
+    <button type="button" onclick="setLang('en')" data-lang-btn="en" class="lang-pill text-xs font-mono px-2.5 py-1.5 rounded-lg border border-app flex-1 text-main">EN</button>
+  </div>
+
+  <div class="my-3 border-t border-app"></div>
+  <nav class="flex flex-col gap-1 text-sm">
+    <button type="button" onclick="comingSoon()" class="flex items-center gap-3 px-2 py-2.5 rounded-lg text-main"><span data-i18n="drawerHelp"></span></button>
+    <button type="button" onclick="showSupportInfo()" class="flex items-center gap-3 px-2 py-2.5 rounded-lg text-main"><span data-i18n="drawerContact"></span></button>
+  </nav>
+
+  <button type="button" onclick="handleLogout()" class="mt-auto flex items-center gap-2 px-2 py-2.5 rounded-lg text-sm" style="color:var(--danger)">
+    <span data-i18n="drawerLogout"></span>
+  </button>
+</aside>
+
+<div class="app-shell">
+
+  <!-- TOP BAR -->
+  <header class="sticky top-0 z-40 flex items-center justify-between gap-3 px-4 py-3 border-b bg-app border-app">
+    <button type="button" aria-label="Menyu" onclick="openDrawer()" class="p-2 -ml-2 text-main">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div class="flex items-center gap-1">
+      <span class="font-display text-lg font-bold text-main">USTA</span><span class="font-display text-lg font-bold text-accent">ZONE</span>
+    </div>
+    <div class="flex items-center gap-1">
+      <button type="button" aria-label="Qidiruv" onclick="document.getElementById('searchInput').focus()" class="p-2 text-main">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+      <button type="button" aria-label="Bildirishnomalar" class="p-2 text-main relative">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        <span class="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-accent"></span>
+      </button>
+    </div>
+  </header>
+
+  <main class="pb-28">
+
+    <!-- ============ PAGE: HOME ============ -->
+    <section id="page-home" class="page active px-4 pt-4">
+      <p data-i18n="tagline" class="text-sm text-muted mb-3"></p>
+
+      <div class="relative mb-3">
+        <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-faint pointer-events-none">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </span>
+        <input id="searchInput" type="text" data-i18n-ph="searchPlaceholder" oninput="onSearch(event)"
+          class="w-full rounded-2xl bg-card border border-app text-main px-4 py-3 pl-11 text-sm"/>
+      </div>
+
+      <p class="font-mono text-xs text-muted mb-4"><span id="activeCount" class="text-accent font-semibold"></span> <span data-i18n="activeSuffix"></span></p>
+
+      <div id="categoryChips" class="flex gap-2 overflow-x-auto no-scrollbar mb-6 pb-1"></div>
+
+      <div class="flex items-center justify-between mb-3">
+        <h2 data-i18n="topTitle" class="font-display font-bold text-main"></h2>
+      </div>
+      <div id="topCraftsmen" class="flex gap-3 overflow-x-auto no-scrollbar mb-6 pb-1"></div>
+
+      <div class="flex items-center justify-between mb-3">
+        <h2 data-i18n="allTitle" class="font-display font-bold text-main"></h2>
+      </div>
+      <div id="allCraftsmen" class="grid grid-cols-2 gap-3"></div>
+    </section>
+
+    <!-- ============ PAGE: CATEGORIES ============ -->
+    <section id="page-categories" class="page px-4 pt-4">
+      <h2 data-i18n="categoriesTitle" class="font-display font-bold text-lg text-main mb-4"></h2>
+      <div id="categoriesGrid" class="grid grid-cols-3 gap-3"></div>
+    </section>
+
+    <!-- ============ PAGE: POST AD ============ -->
+    <section id="page-post" class="page px-4 pt-4">
+      <div id="postForm">
+        <h2 data-i18n="postTitle" class="font-display font-bold text-lg text-main mb-4"></h2>
+        <form onsubmit="submitAd(event)" class="space-y-4">
+
+          <div>
+            <label data-i18n="fieldCategory" class="block text-xs font-medium text-muted mb-1.5"></label>
+            <select id="postCategory" name="category" required class="w-full rounded-xl bg-card border border-app text-main px-3.5 py-2.5 text-sm"></select>
+          </div>
+
+          <div>
+            <label data-i18n="fieldTitle" class="block text-xs font-medium text-muted mb-1.5"></label>
+            <input type="text" name="title" required data-i18n-ph="fieldTitlePh" class="w-full rounded-xl bg-card border border-app text-main px-3.5 py-2.5 text-sm"/>
+          </div>
+
+          <div>
+            <label data-i18n="fieldDesc" class="block text-xs font-medium text-muted mb-1.5"></label>
+            <textarea name="description" rows="3" data-i18n-ph="fieldDescPh" class="w-full rounded-xl bg-card border border-app text-main px-3.5 py-2.5 text-sm resize-none"></textarea>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label data-i18n="fieldPrice" class="block text-xs font-medium text-muted mb-1.5"></label>
+              <input type="number" name="price" data-i18n-ph="fieldPricePh" class="w-full rounded-xl bg-card border border-app text-main px-3.5 py-2.5 text-sm font-mono"/>
+            </div>
+            <div>
+              <label data-i18n="fieldCity" class="block text-xs font-medium text-muted mb-1.5"></label>
+              <select id="postCity" name="city" class="w-full rounded-xl bg-card border border-app text-main px-3.5 py-2.5 text-sm"></select>
+            </div>
+          </div>
+
+          <div>
+            <label data-i18n="fieldPhoto" class="block text-xs font-medium text-muted mb-1.5"></label>
+            <label class="flex items-center gap-3 rounded-xl border border-dashed border-app px-3.5 py-4 cursor-pointer">
+              <span class="text-muted shrink-0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg></span>
+              <span class="flex flex-col">
+                <span class="text-xs text-faint" data-i18n="fieldPhotoHint"></span>
+                <span id="photoFileName" class="text-xs text-accent font-medium mt-0.5"></span>
+              </span>
+              <input type="file" id="postPhoto" name="photo" accept="image/*" onchange="validatePhoto(event)" class="hidden"/>
+            </label>
+          </div>
+
+          <div class="pt-2">
+            <p data-i18n="boostTitle" class="text-sm font-semibold text-main mb-3"></p>
+            <div class="space-y-2.5" role="radiogroup" aria-label="Boost">
+
+              <label for="boostFree" class="boost-option selected rounded-xl p-3.5 flex items-center justify-between cursor-pointer" data-boost="free">
+                <span class="flex items-center gap-3">
+                  <input type="radio" name="boost" id="boostFree" value="free" checked onchange="selectBoost('free')">
+                  <span>
+                    <span data-i18n="boostFreeName" class="block text-sm font-medium text-main"></span>
+                    <span data-i18n="boostFreeDesc" class="block text-xs text-muted mt-0.5"></span>
+                  </span>
+                </span>
+                <span class="font-mono text-sm text-muted shrink-0" id="priceFreeLabel"></span>
+              </label>
+
+              <label for="boostDaily" class="boost-option rounded-xl p-3.5 flex items-center justify-between cursor-pointer" data-boost="daily">
+                <span class="flex items-center gap-3">
+                  <input type="radio" name="boost" id="boostDaily" value="daily" onchange="selectBoost('daily')">
+                  <span>
+                    <span data-i18n="boostDailyName" class="block text-sm font-medium text-main"></span>
+                    <span data-i18n="boostDailyDesc" class="block text-xs text-muted mt-0.5"></span>
+                  </span>
+                </span>
+                <span class="font-mono text-sm text-gold shrink-0" id="priceDailyLabel"></span>
+              </label>
+
+              <label for="boostMonthly" class="boost-option rounded-xl p-3.5 block cursor-pointer" data-boost="monthly">
+                <span class="flex items-center justify-between">
+                  <span class="flex items-center gap-3">
+                    <input type="radio" name="boost" id="boostMonthly" value="monthly" onchange="selectBoost('monthly')">
+                    <span>
+                      <span data-i18n="boostMonthlyName" class="block text-sm font-medium text-main"></span>
+                      <span data-i18n="boostMonthlyDesc" class="block text-xs text-muted mt-0.5"></span>
+                    </span>
+                  </span>
+                  <span class="font-mono text-sm text-gold shrink-0" id="priceMonthlyLabel"></span>
+                </span>
+                <span data-i18n="boostSaveTag" class="inline-block mt-2 ml-7 text-[11px] font-medium text-accent rounded-full px-2 py-0.5" style="background:rgba(33,241,168,.1)"></span>
+              </label>
+
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between pt-3 border-t border-app">
+            <span data-i18n="totalLabel" class="text-sm text-muted"></span>
+            <span id="totalPrice" class="font-mono text-lg font-semibold text-accent"></span>
+          </div>
+
+          <button type="submit" data-i18n="submitBtn" class="w-full rounded-xl bg-accent font-semibold py-3.5 text-sm" style="color:var(--accent-ink)"></button>
+        </form>
+      </div>
+
+      <div id="postSuccess" class="hidden text-center py-16 px-4">
+        <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-accent border-2 border-accent" style="background:rgba(33,241,168,.08)">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h3 data-i18n="successTitle" class="font-display font-bold text-lg text-main mb-2"></h3>
+        <p data-i18n="successDesc" class="text-sm text-muted mb-6"></p>
+        <button type="button" onclick="resetPostForm()" data-i18n="newPostBtn" class="rounded-xl border border-app px-5 py-2.5 text-sm text-main"></button>
+      </div>
+    </section>
+
+    <!-- ============ PAGE: MESSAGES ============ -->
+    <section id="page-messages" class="page px-4 pt-4">
+      <h2 data-i18n="messagesTitle" class="font-display font-bold text-lg text-main mb-2"></h2>
+      <div id="messagesList"></div>
+    </section>
+
+    <!-- ============ PAGE: PROFILE ============ -->
+    <section id="page-profile" class="page px-4 pt-4">
+      <div class="flex items-center gap-3.5 mb-5">
+        <div class="w-16 h-16 rounded-full bg-card border border-app flex items-center justify-center font-display font-bold text-accent text-lg">AQ</div>
+        <div>
+          <p class="font-display font-bold text-main">Aziz Qodirov</p>
+          <p class="text-xs text-muted font-mono">+998 90 123 45 67</p>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between rounded-xl bg-card border border-app p-3.5 mb-5">
+        <div>
+          <p data-i18n="profileWorkLabel" class="text-sm font-medium text-main"></p>
+          <p data-i18n="profileWorkDesc" class="text-xs text-muted mt-0.5"></p>
+        </div>
+        <button type="button" id="workSwitch" class="switch" onclick="toggleWork()" aria-pressed="false" aria-label="Usta sifatida ishlash"></button>
+      </div>
+
+      <div class="grid grid-cols-3 gap-2.5 mb-6">
+        <div class="rounded-xl bg-card border border-app p-3 text-center"><p class="font-mono font-semibold text-main">12</p><p data-i18n="statListings" class="text-[11px] text-muted mt-0.5"></p></div>
+        <div class="rounded-xl bg-card border border-app p-3 text-center"><p class="font-mono font-semibold text-main">3.4K</p><p data-i18n="statViews" class="text-[11px] text-muted mt-0.5"></p></div>
+        <div class="rounded-xl bg-card border border-app p-3 text-center"><p class="font-mono font-semibold text-main">4.8</p><p data-i18n="statRating" class="text-[11px] text-muted mt-0.5"></p></div>
+      </div>
+
+      <p data-i18n="settingsTitle" class="text-xs font-semibold text-faint uppercase tracking-wide mb-2 px-1"></p>
+      <div class="rounded-xl bg-card border border-app overflow-hidden">
+
+        <div class="setting-row flex items-center justify-between px-3.5 py-3">
+          <div class="flex items-center gap-2.5">
+            <span id="themeIcon" class="text-muted"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span>
+            <span data-i18n="settingsTheme" class="text-sm text-main"></span>
+          </div>
+          <button type="button" id="themeSwitch" class="switch" onclick="toggleTheme()" aria-pressed="false" aria-label="Ko'rinish rejimi"></button>
+        </div>
+
+        <div class="setting-row flex items-center justify-between px-3.5 py-3">
+          <span data-i18n="settingsLanguage" class="text-sm text-main"></span>
+          <div class="flex gap-1.5">
+            <button type="button" onclick="setLang('uz')" data-lang-btn="uz" class="lang-pill text-xs font-mono px-2 py-1 rounded-lg border border-app text-main">UZ</button>
+            <button type="button" onclick="setLang('ru')" data-lang-btn="ru" class="lang-pill text-xs font-mono px-2 py-1 rounded-lg border border-app text-main">RU</button>
+            <button type="button" onclick="setLang('en')" data-lang-btn="en" class="lang-pill text-xs font-mono px-2 py-1 rounded-lg border border-app text-main">EN</button>
+          </div>
+        </div>
+
+        <button type="button" onclick="comingSoon()" class="setting-row w-full flex items-center justify-between px-3.5 py-3">
+          <span data-i18n="settingsNotif" class="text-sm text-main"></span>
+          <span class="text-faint"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+        </button>
+        <button type="button" onclick="comingSoon()" class="setting-row w-full flex items-center justify-between px-3.5 py-3">
+          <span data-i18n="settingsPrivacy" class="text-sm text-main"></span>
+          <span class="text-faint"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+        </button>
+        <button type="button" onclick="comingSoon()" class="setting-row w-full flex items-center justify-between px-3.5 py-3">
+          <span data-i18n="settingsHelp" class="text-sm text-main"></span>
+          <span class="text-faint"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+        </button>
+        <button type="button" onclick="handleLogout()" class="setting-row w-full flex items-center justify-between px-3.5 py-3" style="color:var(--danger)">
+          <span data-i18n="settingsLogout" class="text-sm"></span>
+          <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- BOTTOM TAB BAR -->
+  <nav class="fixed bottom-0 inset-x-0 z-40 border-t border-app bg-elevated">
+    <div class="max-w-lg mx-auto flex items-end justify-between px-2 pt-2 pb-[calc(env(safe-area-inset-bottom)+8px)]">
+      <button type="button" data-tab="home" onclick="switchTab('home')" class="tab-btn flex-1 flex flex-col items-center gap-1 py-1.5 text-accent">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V10"/></svg>
+        <span data-i18n="navHome" class="text-[10px] font-medium"></span>
+      </button>
+      <button type="button" data-tab="categories" onclick="switchTab('categories')" class="tab-btn flex-1 flex flex-col items-center gap-1 py-1.5 text-muted">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        <span data-i18n="navCategories" class="text-[10px] font-medium"></span>
+      </button>
+      <div class="flex-1 flex justify-center">
+        <button type="button" onclick="switchTab('post')" aria-label="E'lon joylash" class="w-14 h-14 -mt-7 rounded-full bg-accent flex items-center justify-center" style="box-shadow:0 6px 18px rgba(33,241,168,.35)">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-ink)" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+      </div>
+      <button type="button" data-tab="messages" onclick="switchTab('messages')" class="tab-btn flex-1 flex flex-col items-center gap-1 py-1.5 text-muted relative">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+        <span class="absolute top-0 right-6 w-1.5 h-1.5 rounded-full bg-accent"></span>
+        <span data-i18n="navMessages" class="text-[10px] font-medium"></span>
+      </button>
+      <button type="button" data-tab="profile" onclick="switchTab('profile')" class="tab-btn flex-1 flex flex-col items-center gap-1 py-1.5 text-muted">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span data-i18n="navProfile" class="text-[10px] font-medium"></span>
+      </button>
+    </div>
+  </nav>
+
+</div>
+
+<div id="toastWrap"><div id="toast"></div></div>
+
+<script>
+/* =========================================================================
+   1) CONFIG — narx va sayt sozlamalari. Boshqa mijoz uchun moslashda
+      faqat shu blokni tahrirlash kifoya.
+   ========================================================================= */
+const CONFIG = {
+  siteName: "Usta Zone",
+  boost: { dailyPrice: 5000, monthlyPrice: 70000 },
+  defaultLang: "uz",
+  defaultTheme: "light",
+  supportContact: "+998 71 200 00 00"
+};
+
+/* =========================================================================
+   2) I18N — interfeys matnlari (uz / ru / en). Backend ulanganda bu
+      obyektni /api/i18n dan olib almashtirish mumkin.
+   ========================================================================= */
+const LABELS = {
+  uz:{ appName:"Usta Zone", tagline:"Ishonchli ustalarni bir joydan toping", navHome:"Bosh sahifa", navCategories:"Toifalar", navMessages:"Xabarlar", navProfile:"Profil",
+    searchPlaceholder:"Usta yoki xizmat qidiring...", activeSuffix:"faol usta", allChip:"Barchasi", topTitle:"TOP ustalar", allTitle:"Barcha ustalar", contactBtn:"Bog'lanish",
+    daysLeftSuffix:"kun qoldi", categoriesTitle:"Barcha toifalar", postTitle:"Yangi e'lon", fieldCategory:"Toifa", fieldCategoryPh:"Toifani tanlang",
+    fieldTitle:"Sarlavha", fieldTitlePh:"Masalan: Elektr simlarini almashtirish", fieldDesc:"Tavsif", fieldDescPh:"Xizmatingiz haqida batafsil yozing...",
+    fieldPrice:"Narx (so'm)", fieldPricePh:"Masalan: 50000", fieldCity:"Shahar", fieldCityPh:"Shaharni tanlang", fieldPhoto:"Rasm qo'shish", fieldPhotoHint:"JPG yoki PNG, 5MB gacha",
+    boostTitle:"E'loningizni ko'proq ko'rsating", boostFreeName:"Oddiy", boostFreeDesc:"E'lon ro'yxatda navbat bilan chiqadi", boostDailyName:"Kunlik TOP",
+    boostDailyDesc:"Ro'yxat boshida — har kuni yangilanadi", boostMonthlyName:"30 kunlik TOP", boostMonthlyDesc:"To'liq oy davomida ro'yxat boshida",
+    boostSaveTag:"80 000 so'm tejang", totalLabel:"Jami", submitBtn:"E'lonni joylashtirish", successTitle:"E'loningiz yuborildi",
+    successDesc:"Moderatsiyadan so'ng (odatda 1 soat ichida) u faol bo'ladi.", newPostBtn:"Yana e'lon qo'shish", messagesTitle:"Xabarlar",
+    profileWorkLabel:"Usta sifatida ishlayman", profileWorkDesc:"Yoqilsa, siz ham e'lon joylay olasiz", statListings:"E'lonlar", statViews:"Ko'rishlar", statRating:"Reyting",
+    settingsTitle:"Sozlamalar", settingsTheme:"Ko'rinish rejimi", settingsLanguage:"Til", settingsNotif:"Bildirishnomalar", settingsPrivacy:"Maxfiylik",
+    settingsHelp:"Yordam", settingsLogout:"Chiqish", drawerViewProfile:"Profilni ko'rish", drawerListings:"Mening e'lonlarim", drawerFav:"Sevimlilar",
+    drawerHelp:"Yordam markazi", drawerContact:"Biz bilan bog'laning", drawerLogout:"Chiqish", currency:"so'm", perDay:"kun",
+    toastComingSoon:"Bu funksiya tez orada qo'shiladi", toastLoggedOut:"Tizimdan chiqildi (demo rejimi)",
+    toastSupport:`Biz bilan bog'lanish: ${CONFIG.supportContact}`, toastPhotoTooBig:"Rasm hajmi 5MB dan oshmasligi kerak",
+    toastSaved:"Saqlangan ustalarga qo'shildi", toastUnsaved:"Saqlangandan olib tashlandi" },
+
+  ru:{ appName:"Usta Zone", tagline:"Найдите надёжных мастеров в одном месте", navHome:"Главная", navCategories:"Категории", navMessages:"Сообщения", navProfile:"Профиль",
+    searchPlaceholder:"Поиск мастера или услуги...", activeSuffix:"активных мастеров", allChip:"Все", topTitle:"ТОП мастера", allTitle:"Все мастера", contactBtn:"Связаться",
+    daysLeftSuffix:"дней осталось", categoriesTitle:"Все категории", postTitle:"Новое объявление", fieldCategory:"Категория", fieldCategoryPh:"Выберите категорию",
+    fieldTitle:"Заголовок", fieldTitlePh:"Например: Замена электропроводки", fieldDesc:"Описание", fieldDescPh:"Подробно опишите вашу услугу...",
+    fieldPrice:"Цена (сум)", fieldPricePh:"Например: 50000", fieldCity:"Город", fieldCityPh:"Выберите город", fieldPhoto:"Добавить фото", fieldPhotoHint:"JPG или PNG, до 5МБ",
+    boostTitle:"Покажите объявление большему числу людей", boostFreeName:"Обычное", boostFreeDesc:"Объявление выходит по очереди", boostDailyName:"Дневной ТОП",
+    boostDailyDesc:"В начале списка — обновляется каждый день", boostMonthlyName:"ТОП на 30 дней", boostMonthlyDesc:"В начале списка весь месяц",
+    boostSaveTag:"Экономия 80 000 сум", totalLabel:"Итого", submitBtn:"Опубликовать объявление", successTitle:"Объявление отправлено",
+    successDesc:"После модерации (обычно в течение часа) оно станет активным.", newPostBtn:"Добавить ещё", messagesTitle:"Сообщения",
+    profileWorkLabel:"Я работаю как мастер", profileWorkDesc:"Включите, чтобы размещать объявления", statListings:"Объявления", statViews:"Просмотры", statRating:"Рейтинг",
+    settingsTitle:"Настройки", settingsTheme:"Тема оформления", settingsLanguage:"Язык", settingsNotif:"Уведомления", settingsPrivacy:"Конфиденциальность",
+    settingsHelp:"Помощь", settingsLogout:"Выйти", drawerViewProfile:"Открыть профиль", drawerListings:"Мои объявления", drawerFav:"Избранное",
+    drawerHelp:"Центр помощи", drawerContact:"Связаться с нами", drawerLogout:"Выйти", currency:"сум", perDay:"день",
+    toastComingSoon:"Эта функция появится позже", toastLoggedOut:"Вы вышли (демо-режим)",
+    toastSupport:`Свяжитесь с нами: ${CONFIG.supportContact}`, toastPhotoTooBig:"Размер файла не должен превышать 5МБ",
+    toastSaved:"Добавлено в избранное", toastUnsaved:"Удалено из избранного" },
+
+  en:{ appName:"Usta Zone", tagline:"Find trusted craftsmen in one place", navHome:"Home", navCategories:"Categories", navMessages:"Messages", navProfile:"Profile",
+    searchPlaceholder:"Search craftsman or service...", activeSuffix:"active craftsmen", allChip:"All", topTitle:"TOP craftsmen", allTitle:"All craftsmen", contactBtn:"Contact",
+    daysLeftSuffix:"days left", categoriesTitle:"All categories", postTitle:"New listing", fieldCategory:"Category", fieldCategoryPh:"Choose a category",
+    fieldTitle:"Title", fieldTitlePh:"E.g. Rewiring an apartment", fieldDesc:"Description", fieldDescPh:"Describe your service in detail...",
+    fieldPrice:"Price (UZS)", fieldPricePh:"E.g. 50000", fieldCity:"City", fieldCityPh:"Choose a city", fieldPhoto:"Add a photo", fieldPhotoHint:"JPG or PNG, up to 5MB",
+    boostTitle:"Show your listing to more people", boostFreeName:"Standard", boostFreeDesc:"Listed in regular order", boostDailyName:"Daily TOP",
+    boostDailyDesc:"Top of the list — renewed daily", boostMonthlyName:"30-day TOP", boostMonthlyDesc:"Top of the list for a full month",
+    boostSaveTag:"Save 80,000 so'm", totalLabel:"Total", submitBtn:"Publish listing", successTitle:"Listing submitted",
+    successDesc:"It will go live after moderation (usually within an hour).", newPostBtn:"Add another listing", messagesTitle:"Messages",
+    profileWorkLabel:"I work as a craftsman", profileWorkDesc:"Turn on to post your own listings", statListings:"Listings", statViews:"Views", statRating:"Rating",
+    settingsTitle:"Settings", settingsTheme:"Appearance", settingsLanguage:"Language", settingsNotif:"Notifications", settingsPrivacy:"Privacy",
+    settingsHelp:"Help", settingsLogout:"Log out", drawerViewProfile:"View profile", drawerListings:"My listings", drawerFav:"Favorites",
+    drawerHelp:"Help center", drawerContact:"Contact us", drawerLogout:"Log out", currency:"so'm", perDay:"day",
+    toastComingSoon:"This feature is coming soon", toastLoggedOut:"Logged out (demo mode)",
+    toastSupport:`Contact us: ${CONFIG.supportContact}`, toastPhotoTooBig:"File size must not exceed 5MB",
+    toastSaved:"Added to favorites", toastUnsaved:"Removed from favorites" }
+};
+
+/* =========================================================================
+   3) MA'LUMOTLAR — hozircha mock. Backend tayyor bo'lganda CATEGORIES va
+      CRAFTSMEN massivlarini fetch('/api/...') natijasiga almashtiring.
+   ========================================================================= */
+const CITIES = {
+  tashkent:{uz:"Toshkent",ru:"Ташкент",en:"Tashkent"}, samarkand:{uz:"Samarqand",ru:"Самарканд",en:"Samarkand"},
+  andijan:{uz:"Andijon",ru:"Андижан",en:"Andijan"}, fergana:{uz:"Farg'ona",ru:"Фергана",en:"Fergana"},
+  namangan:{uz:"Namangan",ru:"Наманган",en:"Namangan"}, bukhara:{uz:"Buxoro",ru:"Бухара",en:"Bukhara"}, khorezm:{uz:"Xorazm",ru:"Хорезм",en:"Khorezm"}
+};
+
+const CATEGORIES = [
+  {id:'electric', icon:'🔌', count:412, name:{uz:"Elektrik", ru:"Электрик", en:"Electrician"}},
+  {id:'plumber', icon:'🚿', count:356, name:{uz:"Santexnik", ru:"Сантехник", en:"Plumber"}},
+  {id:'carpenter', icon:'🪚', count:198, name:{uz:"Duradgor", ru:"Плотник", en:"Carpenter"}},
+  {id:'painter', icon:'🎨', count:241, name:{uz:"Bo'yoqchi", ru:"Маляр", en:"Painter"}},
+  {id:'tiler', icon:'🧱', count:173, name:{uz:"Kafelchi", ru:"Плиточник", en:"Tiler"}},
+  {id:'welder', icon:'🔥', count:96, name:{uz:"Payvandchi", ru:"Сварщик", en:"Welder"}},
+  {id:'hvac', icon:'❄️', count:128, name:{uz:"Konditsioner ustasi", ru:"Мастер по кондиционерам", en:"HVAC technician"}},
+  {id:'furniture', icon:'🪑', count:87, name:{uz:"Mebel ustasi", ru:"Мебельщик", en:"Furniture maker"}},
+  {id:'auto', icon:'🚗', count:264, name:{uz:"Avtomexanik", ru:"Автомеханик", en:"Auto mechanic"}},
+  {id:'tech', icon:'💻', count:152, name:{uz:"Kompyuter ustasi", ru:"Компьютерный мастер", en:"Computer technician"}},
+  {id:'general', icon:'🧰', count:305, name:{uz:"Qurilish-ta'mirlash", ru:"Строительство и ремонт", en:"Construction & repair"}},
+  {id:'gardener', icon:'🌳', count:64, name:{uz:"Bog'bon", ru:"Садовник", en:"Gardener"}}
+];
+
+const CRAFTSMEN = [
+  {id:1, name:"Alisher Qodirov", category:'electric', city:CITIES.tashkent, rating:4.9, reviews:128, priceFrom:50000, phone:"+998901234501", top:{active:true, daysLeft:12}},
+  {id:2, name:"Bekzod Yusupov", category:'plumber', city:CITIES.tashkent, rating:4.7, reviews:94, priceFrom:40000, phone:"+998901234502", top:{active:false}},
+  {id:3, name:"Dilshod Rahimov", category:'carpenter', city:CITIES.samarkand, rating:4.8, reviews:76, priceFrom:60000, phone:"+998901234503", top:{active:true, daysLeft:5}},
+  {id:4, name:"Farrux Aliyev", category:'painter', city:CITIES.tashkent, rating:4.6, reviews:51, priceFrom:35000, phone:"+998901234504", top:{active:false}},
+  {id:5, name:"Jasur Toshev", category:'tiler', city:CITIES.andijan, rating:4.9, reviews:143, priceFrom:55000, phone:"+998901234505", top:{active:true, daysLeft:20}},
+  {id:6, name:"Nodir Egamov", category:'welder', city:CITIES.fergana, rating:4.5, reviews:39, priceFrom:45000, phone:"+998901234506", top:{active:false}},
+  {id:7, name:"Otabek Nazarov", category:'hvac', city:CITIES.tashkent, rating:4.8, reviews:88, priceFrom:70000, phone:"+998901234507", top:{active:false}},
+  {id:8, name:"Rustam Hoshimov", category:'furniture', city:CITIES.namangan, rating:4.7, reviews:62, priceFrom:65000, phone:"+998901234508", top:{active:true, daysLeft:3}},
+  {id:9, name:"Sardor Umarov", category:'auto', city:CITIES.tashkent, rating:4.9, reviews:210, priceFrom:30000, phone:"+998901234509", top:{active:false}},
+  {id:10, name:"Timur Bekchanov", category:'tech', city:CITIES.bukhara, rating:4.6, reviews:47, priceFrom:25000, phone:"+998901234510", top:{active:false}},
+  {id:11, name:"Ulug'bek Sattorov", category:'general', city:CITIES.tashkent, rating:4.7, reviews:99, priceFrom:80000, phone:"+998901234511", top:{active:true, daysLeft:8}},
+  {id:12, name:"Zafar Mirzayev", category:'gardener', city:CITIES.khorezm, rating:4.5, reviews:28, priceFrom:30000, phone:"+998901234512", top:{active:false}}
+];
+
+// Backend/kategoriya ma'lumotida noto'g'ri yoki topilmagan id kelsa dastur qotib qolmasligi uchun fallback:
+const FALLBACK_CATEGORY = { id:'other', icon:'🔧', count:0, name:{uz:'Boshqa', ru:'Другое', en:'Other'} };
+function getCategory(id){ return CATEGORIES.find(c=>c.id===id) || FALLBACK_CATEGORY; }
+
+const MESSAGES_MOCK = [
+  {name:"Alisher Qodirov", snippet:"Ertaga soat 10 da kelaman", time:"14:32", unread:true},
+  {name:"Dilshod Rahimov", snippet:"Rahmat, hammasi ajoyib bo'ldi!", time:"Kecha", unread:false},
+  {name:"Sardor Umarov", snippet:"Narxi qancha bo'ladi?", time:"Kecha", unread:false},
+  {name:"Jasur Toshev", snippet:"Manzilni yuboring iltimos", time:"2 kun oldin", unread:true}
+];
+
+const ICON_STAR = `<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" class="inline"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`;
+const ICON_MOON = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>`;
+const ICON_SUN = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`;
+const ICON_BOOKMARK_OUTLINE = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>`;
+const ICON_BOOKMARK_FILLED = `<svg width="14" height="14" viewBox="0 0 24 24" fill="var(--accent-ink)" stroke="var(--accent-ink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>`;
+
+
+/* =========================================================================
+   4) HOLAT (STATE)
+   ========================================================================= */
+let state = { lang: CONFIG.defaultLang, theme: CONFIG.defaultTheme, activeTab:'home', activeCategory:null, searchQuery:'', boostChoice:'free', isCraftsman:false, savedIds:new Set(), showSavedOnly:false };
+
+/* =========================================================================
+   5) RENDER FUNKSIYALARI
+   ========================================================================= */
+function fmt(n){ return n.toLocaleString('ru-RU'); }
+
+function categoryChipHTML(cat, lang, active){
+  return `<button type="button" onclick="filterCategory('${cat.id}')" class="chip ${active?'active':''} shrink-0 flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium text-main">
+    <span>${cat.icon}</span><span>${cat.name[lang]}</span></button>`;
+}
+function renderCategoryChips(){
+  const lang = state.lang;
+  let html = `<button type="button" onclick="filterCategory(null)" class="chip ${!state.activeCategory?'active':''} shrink-0 rounded-full px-3.5 py-2 text-xs font-medium text-main">${LABELS[lang].allChip}</button>`;
+  html += CATEGORIES.map(c=>categoryChipHTML(c,lang,state.activeCategory===c.id)).join('');
+  document.getElementById('categoryChips').innerHTML = html;
+}
+
+function craftsmanCardHTML(c, lang, compact){
+  const cat = getCategory(c.category);
+  const initials = c.name.split(' ').map(w=>w[0]).slice(0,2).join('');
+  const seal = c.top.active ? `<div class="seal"><span>TOP</span></div>` : '';
+  const daysLeft = c.top.active ? `<p class="font-mono text-[10px] text-gold mt-1">${c.top.daysLeft} ${LABELS[lang].daysLeftSuffix}</p>` : '';
+  const isSaved = state.savedIds.has(c.id);
+  const saveBtn = `<button type="button" onclick="toggleSave(${c.id}, event)" aria-label="Saqlash" aria-pressed="${isSaved}"
+      class="absolute rounded-full flex items-center justify-center" style="top:8px;right:8px;width:26px;height:26px;background:${isSaved?'var(--accent)':'rgba(0,0,0,.4)'}">
+      ${isSaved ? ICON_BOOKMARK_FILLED : ICON_BOOKMARK_OUTLINE}
+    </button>`;
+  return `<div class="card ${compact?'w-[168px] shrink-0':''} relative rounded-2xl bg-card border border-app p-3">
+    ${seal}${saveBtn}
+    <div class="w-12 h-12 rounded-full flex items-center justify-center font-display font-bold text-accent text-sm mb-2.5 border border-app" style="background:rgba(33,241,168,.08)">${initials}</div>
+    <p class="font-display font-semibold text-sm text-main truncate">${c.name}</p>
+    <p class="text-xs text-muted truncate mt-0.5">${cat.name[lang]}</p>
+    <div class="flex items-center gap-1 mt-1.5 text-xs">
+      <span class="text-gold">${ICON_STAR}</span>
+      <span class="font-mono text-main">${c.rating}</span>
+      <span class="text-faint">(${c.reviews})</span>
+      <span class="text-faint">·</span>
+      <span class="text-faint truncate">${c.city[lang]}</span>
+    </div>
+    <p class="font-mono text-sm text-accent font-semibold mt-2">${fmt(c.priceFrom)} <span class="text-[10px] text-muted font-sans font-normal">${LABELS[lang].currency}</span></p>
+    ${daysLeft}
+    <a href="tel:${c.phone}" class="w-full mt-2.5 rounded-lg border border-app text-main text-xs font-medium py-2 flex items-center justify-center">${LABELS[lang].contactBtn}</a>
+  </div>`;
+}
+
+function getFilteredCraftsmen(){
+  const q = state.searchQuery.trim().toLowerCase();
+  return CRAFTSMEN.filter(c=>{
+    if(state.showSavedOnly && !state.savedIds.has(c.id)) return false;
+    const matchesCat = !state.activeCategory || c.category===state.activeCategory;
+    const catName = getCategory(c.category).name[state.lang].toLowerCase();
+    const matchesQuery = !q || c.name.toLowerCase().includes(q) || catName.includes(q);
+    return matchesCat && matchesQuery;
+  });
+}
+
+function refreshHome(){
+  const list = getFilteredCraftsmen();
+  renderCategoryChips();
+  const top = list.filter(c=>c.top.active);
+  document.getElementById('topCraftsmen').innerHTML = top.map(c=>craftsmanCardHTML(c,state.lang,true)).join('');
+  document.getElementById('allCraftsmen').innerHTML = list.map(c=>craftsmanCardHTML(c,state.lang,false)).join('');
+}
+function filterCategory(id){ state.activeCategory = (state.activeCategory===id) ? null : id; state.showSavedOnly = false; refreshHome(); }
+function onSearch(e){ state.searchQuery = e.target.value; refreshHome(); }
+function toggleSave(id, evt){
+  evt.preventDefault(); evt.stopPropagation();
+  if(state.savedIds.has(id)){ state.savedIds.delete(id); showToast(LABELS[state.lang].toastUnsaved); }
+  else { state.savedIds.add(id); showToast(LABELS[state.lang].toastSaved); }
+  refreshHome();
+}
+function showSaved(){
+  closeDrawer();
+  state.activeCategory = null; state.showSavedOnly = true; state.searchQuery = '';
+  const si = document.getElementById('searchInput'); if(si) si.value = '';
+  switchTab('home');
+  refreshHome();
+}
+
+function categoryTileHTML(cat, lang){
+  return `<button type="button" onclick="filterCategory('${cat.id}'); switchTab('home')" class="rounded-2xl bg-card border border-app p-3.5 flex flex-col items-center gap-2 text-center">
+    <span class="text-2xl">${cat.icon}</span><span class="text-xs font-medium text-main">${cat.name[lang]}</span><span class="font-mono text-[10px] text-muted">${cat.count}</span></button>`;
+}
+function renderCategoriesGrid(){ document.getElementById('categoriesGrid').innerHTML = CATEGORIES.map(c=>categoryTileHTML(c,state.lang)).join(''); }
+
+function populatePostSelects(){
+  const lang = state.lang;
+  const catSel = document.getElementById('postCategory');
+  const prevCat = catSel.value;
+  catSel.innerHTML = `<option value="">${LABELS[lang].fieldCategoryPh}</option>` + CATEGORIES.map(c=>`<option value="${c.id}">${c.icon} ${c.name[lang]}</option>`).join('');
+  catSel.value = prevCat;
+
+  const citySel = document.getElementById('postCity');
+  const prevCity = citySel.value;
+  citySel.innerHTML = `<option value="">${LABELS[lang].fieldCityPh}</option>` + Object.entries(CITIES).map(([key,c])=>`<option value="${key}">${c[lang]}</option>`).join('');
+  citySel.value = prevCity;
+}
+
+function validatePhoto(e){
+  const file = e.target.files && e.target.files[0];
+  const nameEl = document.getElementById('photoFileName');
+  if(!file){ if(nameEl) nameEl.textContent = ''; return; }
+  const maxBytes = 5 * 1024 * 1024;
+  if(file.size > maxBytes){
+    showToast(LABELS[state.lang].toastPhotoTooBig);
+    e.target.value = '';
+    if(nameEl) nameEl.textContent = '';
+    return;
+  }
+  if(nameEl) nameEl.textContent = file.name;
+}
+
+function updateBoostPricesLabels(){
+  const lang = state.lang, cur = LABELS[lang].currency;
+  document.getElementById('priceFreeLabel').textContent = `0 ${cur}`;
+  document.getElementById('priceDailyLabel').textContent = `${fmt(CONFIG.boost.dailyPrice)} ${cur}/${LABELS[lang].perDay}`;
+  document.getElementById('priceMonthlyLabel').textContent = `${fmt(CONFIG.boost.monthlyPrice)} ${cur}`;
+  updateTotal();
+}
+function selectBoost(type){
+  state.boostChoice = type;
+  document.querySelectorAll('.boost-option').forEach(el=>el.classList.toggle('selected', el.dataset.boost===type));
+  updateTotal();
+}
+function updateTotal(){
+  const cur = LABELS[state.lang].currency;
+  let total = 0;
+  if(state.boostChoice==='daily') total = CONFIG.boost.dailyPrice;
+  if(state.boostChoice==='monthly') total = CONFIG.boost.monthlyPrice;
+  document.getElementById('totalPrice').textContent = `${fmt(total)} ${cur}`;
+}
+
+function submitAd(e){
+  e.preventDefault();
+  // TODO: backend ulanganda shu yerga so'rov qo'shiladi, masalan:
+  // await fetch('/api/listings', { method:'POST', body: new FormData(e.target) });
+  document.getElementById('postForm').classList.add('hidden');
+  document.getElementById('postSuccess').classList.remove('hidden');
+}
+function resetPostForm(){
+  document.getElementById('postForm').classList.remove('hidden');
+  document.getElementById('postSuccess').classList.add('hidden');
+  document.querySelector('#postForm form').reset();
+  document.getElementById('photoFileName').textContent = '';
+  selectBoost('free');
+}
+
+function messageItemHTML(m){
+  const initials = m.name.split(' ').map(w=>w[0]).slice(0,2).join('');
+  return `<button type="button" class="setting-row w-full flex items-center gap-3 px-1 py-3 text-left">
+    <div class="w-11 h-11 shrink-0 rounded-full bg-card border border-app flex items-center justify-center font-display font-semibold text-accent text-xs">${initials}</div>
+    <div class="flex-1 min-w-0">
+      <div class="flex items-center justify-between">
+        <p class="text-sm font-medium text-main truncate">${m.name}</p>
+        <span class="font-mono text-[10px] text-faint shrink-0 ml-2">${m.time}</span>
+      </div>
+      <p class="text-xs text-muted truncate mt-0.5">${m.snippet}</p>
+    </div>
+    ${m.unread ? '<span class="w-2 h-2 rounded-full bg-accent shrink-0"></span>' : ''}
+  </button>`;
+}
+function renderMessages(){ document.getElementById('messagesList').innerHTML = MESSAGES_MOCK.map(messageItemHTML).join(''); }
+
+/* =========================================================================
+   6) NAVIGATSIYA / SOZLAMALAR
+   ========================================================================= */
+function switchTab(tab){
+  state.activeTab = tab;
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active', p.id === 'page-'+tab));
+  document.querySelectorAll('.tab-btn').forEach(b=>{
+    const isActive = b.dataset.tab === tab;
+    b.classList.toggle('text-accent', isActive);
+    b.classList.toggle('text-muted', !isActive);
+  });
+  window.scrollTo({top:0});
+}
+function openDrawer(){ document.getElementById('drawer').classList.add('open'); document.getElementById('drawerOverlay').classList.add('open'); }
+function closeDrawer(){ document.getElementById('drawer').classList.remove('open'); document.getElementById('drawerOverlay').classList.remove('open'); }
+
+let toastTimer;
+function showToast(message){
+  const el = document.getElementById('toast');
+  if(!el) return;
+  el.textContent = message;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>el.classList.remove('show'), 2600);
+}
+function comingSoon(){ showToast(LABELS[state.lang].toastComingSoon); }
+function showSupportInfo(){ showToast(LABELS[state.lang].toastSupport); }
+function handleLogout(){ closeDrawer(); showToast(LABELS[state.lang].toastLoggedOut); }
+
+function toggleTheme(){
+  state.theme = state.theme === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', state.theme);
+  document.getElementById('themeSwitch').classList.toggle('on', state.theme === 'dark');
+  document.getElementById('themeIcon').innerHTML = state.theme === 'dark' ? ICON_MOON : ICON_SUN;
+  // TODO: real ilovada bu qiymat foydalanuvchi profiliga backend orqali saqlanadi
+}
+function toggleWork(){
+  state.isCraftsman = !state.isCraftsman;
+  const btn = document.getElementById('workSwitch');
+  btn.classList.toggle('on', state.isCraftsman);
+  btn.setAttribute('aria-pressed', state.isCraftsman);
+}
+function highlightLangPills(){
+  document.querySelectorAll('.lang-pill').forEach(b=>b.classList.toggle('active', b.dataset.langBtn === state.lang));
+}
+function setLang(lang){
+  state.lang = lang;
+  applyLabels();
+  highlightLangPills();
+  populatePostSelects();
+  updateBoostPricesLabels();
+  refreshHome();
+  renderCategoriesGrid();
+}
+function applyLabels(){
+  const L = LABELS[state.lang];
+  document.querySelectorAll('[data-i18n]').forEach(el=>{ const k = el.getAttribute('data-i18n'); if(L[k]!==undefined) el.textContent = L[k]; });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{ const k = el.getAttribute('data-i18n-ph'); if(L[k]!==undefined) el.setAttribute('placeholder', L[k]); });
+  document.documentElement.setAttribute('lang', state.lang);
+}
+
+/* =========================================================================
+   7) INIT
+   ========================================================================= */
+function init(){
+  document.getElementById('activeCount').textContent = fmt(CATEGORIES.reduce((s,c)=>s+c.count,0));
+  applyLabels();
+  highlightLangPills();
+  populatePostSelects();
+  updateBoostPricesLabels();
+  renderCategoriesGrid();
+  renderMessages();
+  refreshHome();
+  switchTab('home');
+}
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
      shu yerda qo'lda CSS sifatida yozilgan (attribute selektor orqali,
      shunda "w-[168px]" kabi maxsus belgili nomlar ham ishlaydi).
      ================================================================ */
