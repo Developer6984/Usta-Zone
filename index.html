@@ -1,39 +1,873 @@
 <!DOCTYPE html>
-<html lang="uz" data-theme="light">
+<html lang="uz">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#F4F5F3">
-<title>Usta Zone — Ustalar bozori</title>
-<meta name="description" content="Toshkent va butun O'zbekiston bo'ylab ishonchli ustalarni toping yoki o'z xizmatingizni e'lon qiling.">
-
-<!-- Mustaqil fayl: tashqi CDN yoki shrift ulanmagan — barcha CSS/JS shu HTML fayl ichida -->
-
+<title>Usta Zone</title>
 <style>
-  /* =====================================================================
-     THEME TOKENS
-     Ikkita rejim (dark/light) shu yerda boshqariladi. Ranglarni mijoz
-     uchun almashtirish kerak bo'lsa — faqat shu ikki blokni tahrirlang.
-     Manba: mijoz yuborgan rang palitrasi (Tiffany #21F1A8 / Dark Gray #171717)
-     ===================================================================== */
-  html[data-theme="dark"]{
-    --bg:#171717; --bg-elevated:#1E1E1E; --bg-card:#1C1C1C;
-    --border:#2B2B2B; --text:#F4F4F2; --text-muted:#9A9A96; --text-faint:#68685F;
-    --accent:#21F1A8; --accent-ink:#06140E; --gold:#F5B942; --danger:#FF6B6B;
-    --overlay:rgba(0,0,0,.6);
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+  :root{
+    --bg:#F7F6F2; --card:#FFFFFF; --card-alt:#EFEDE6; --text:#14201A; --text-muted:#6B756F;
+    --border:rgba(13,15,14,0.08); --outer-bg:#EDEAE3; --ring-track:rgba(13,15,14,0.10);
+    --mint:#5EEAB0; --mint-soft:#8FF3C9; --amber:#FBBF24; --danger:#FF6B6B;
   }
-  html[data-theme="light"]{
-    --bg:#F4F5F3; --bg-elevated:#FFFFFF; --bg-card:#FFFFFF;
-    --border:#E4E5E1; --text:#16171A; --text-muted:#6B6C67; --text-faint:#9A9B96;
-    --accent:#0FBE86; --accent-ink:#FFFFFF; --gold:#B9770E; --danger:#D6453F;
-    --overlay:rgba(0,0,0,.4);
+  :root.dark{
+    --bg:#0D0F0E; --card:#181B19; --card-alt:#21251F; --text:#F2F4F1; --text-muted:#8B928C;
+    --border:rgba(255,255,255,0.08); --outer-bg:#050705; --ring-track:rgba(255,255,255,0.12);
   }
 
-  *{box-sizing:border-box;}
-  a{color:inherit;text-decoration:none;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;}
+  body{
+    font-family:'Inter',-apple-system,sans-serif;
+    background:var(--outer-bg);
+    display:flex; justify-content:center;
+    min-height:100vh; min-height:100dvh;
+  }
+  button,input,textarea{font-family:inherit; color:inherit; background:transparent; border:none; outline:none; font-size:14px;}
+  button{cursor:pointer;}
+  a{color:inherit; text-decoration:none;}
+  button:focus-visible, input:focus-visible, textarea:focus-visible{outline:2px solid var(--mint); outline-offset:2px;}
 
-  /* ================================================================
-     UTILITY LAYER — fayl to'liq mustaqil bo'lishi uchun Tailwind CDN
+  .font-display{font-family:'Space Grotesk',sans-serif;}
+  .mint-text{color:var(--mint);}
+  .text-muted{color:var(--text-muted);}
+
+  /* layout utils */
+  .flex{display:flex;} .flex-col{flex-direction:column;} .items-center{align-items:center;}
+  .justify-between{justify-content:space-between;} .justify-center{justify-content:center;}
+  .gap-1{gap:4px;} .gap-2{gap:8px;} .gap-3{gap:12px;}
+  .flex-1{flex:1;} .shrink-0{flex-shrink:0;} .min-w0{min-width:0;}
+  .text-center{text-align:center;} .relative{position:relative;} .w-full{width:100%;}
+  .mb1{margin-bottom:4px;} .mb2{margin-bottom:8px;} .mb3{margin-bottom:12px;}
+  .mb4{margin-bottom:16px;} .mb5{margin-bottom:20px;} .mb6{margin-bottom:24px;}
+  .mt1{margin-top:4px;} .mt2{margin-top:8px;}
+  .px5{padding-left:20px;padding-right:20px;} .px6{padding-left:24px;padding-right:24px;}
+  .pt5{padding-top:20px;} .pt6{padding-top:56px;}
+  .no-scrollbar::-webkit-scrollbar{display:none;} .no-scrollbar{scrollbar-width:none; -ms-overflow-style:none;}
+
+  .screen{animation:screenIn .28s ease;}
+  @keyframes screenIn{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+  /* app shell */
+  .app-shell{
+    width:100%; max-width:430px; min-height:100vh; min-height:100dvh;
+    display:flex; flex-direction:column; background:var(--bg); color:var(--text);
+    position:relative; box-shadow:0 0 50px rgba(0,0,0,0.15);
+  }
+  .content-area{flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch;}
+
+  /* icon button */
+  .icon-btn{width:34px;height:34px;border-radius:9999px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text);flex-shrink:0;}
+
+  /* home header */
+  .logo-badge{width:34px;height:34px;border-radius:12px;background:var(--mint);display:flex;align-items:center;justify-content:center;color:#0D0F0E;}
+  .logo-text{font-size:18px;font-weight:700;color:var(--text);}
+  .notif-dot{position:absolute; top:8px; right:9px; width:7px; height:7px; border-radius:9999px; background:var(--amber);}
+  .greet-title{font-size:22px;font-weight:600;margin-bottom:2px;}
+  .greet-sub{font-size:14px;margin-bottom:16px;}
+
+  /* search */
+  .search-bar{display:flex;align-items:center;gap:8px;border-radius:16px;padding:12px 16px;background:var(--card);border:1px solid var(--border);color:var(--text-muted);}
+  .search-bar input{flex:1;color:var(--text);}
+
+  /* categories */
+  .category-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0 28px;}
+  .category-tile{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 8px;border-radius:20px;background:var(--card);border:1px solid var(--border);transition:transform .15s ease;}
+  .category-tile:active{transform:scale(0.95);}
+  .category-icon-circle{width:38px;height:38px;border-radius:9999px;display:flex;align-items:center;justify-content:center;}
+  .category-label{font-size:12px;font-weight:500;color:var(--text);text-align:center;}
+
+  .section-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+  .section-title{font-size:16px;font-weight:600;}
+  .see-all-link{display:flex;align-items:center;gap:2px;font-size:12px;font-weight:500;color:var(--mint);}
+
+  /* master cards */
+  .scroll-row{display:flex;gap:12px;overflow-x:auto;margin:0 -20px;padding:0 20px 4px;}
+  .master-card-mini{position:relative;flex-shrink:0;width:152px;display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:14px;border-radius:20px;background:var(--card);border:1px solid var(--border);text-align:left;}
+  .mini-name{font-size:14px;font-weight:600;line-height:1.2;}
+  .mini-cat{font-size:12px;}
+  .mini-rating{font-size:12px;font-weight:600;}
+  .mini-price{font-size:12px;font-weight:600;color:var(--mint);}
+
+  .list-col{display:flex;flex-direction:column;gap:12px;}
+  .list-col.tight{gap:2px;}
+
+  .master-card-full{position:relative;display:flex;align-items:flex-start;gap:12px;padding:16px;border-radius:20px;background:var(--card);border:1px solid var(--border);text-align:left;width:100%;}
+  .full-card-info{flex:1;min-width:0;}
+  .full-name{font-size:14px;font-weight:600;}
+  .full-meta{font-size:12px;margin:2px 0 6px;}
+  .full-rating-row{margin-bottom:10px;}
+  .full-rating{font-size:12px;font-weight:600;}
+  .full-jobs{font-size:12px;}
+  .full-actions{flex-wrap:wrap;}
+  .mini-btn{display:flex;align-items:center;gap:4px;border-radius:9999px;padding:6px 12px;font-size:12px;font-weight:500;background:var(--card-alt);}
+  .mini-btn.accent{background:rgba(94,234,176,0.14); color:var(--mint);}
+  .full-price{font-size:12px;font-weight:600;color:var(--mint);flex-shrink:0;text-align:right;line-height:1.3;}
+
+  .save-btn{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:9999px;background:rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px); z-index:2;}
+
+  /* avatar */
+  .avatar-wrap{position:relative;flex-shrink:0;}
+  .avatar-ring{position:absolute;inset:0;}
+  .avatar-initials{position:absolute;display:flex;align-items:center;justify-content:center;border-radius:9999px;font-family:'Space Grotesk',sans-serif;font-weight:600;color:#0D0F0E;background:linear-gradient(135deg,var(--mint),var(--mint-soft));}
+  .avatar-badge{position:absolute;right:-2px;bottom:-2px;width:18px;height:18px;border-radius:9999px;background:var(--mint);border:2px solid var(--card);display:flex;align-items:center;justify-content:center;color:#0D0F0E;}
+
+  /* chips */
+  .chip-row{display:flex;gap:8px;overflow-x:auto;margin:0 -20px;padding:0 20px 4px;}
+  .chip-row.wrap{flex-wrap:wrap;overflow:visible;margin:0;padding:0;}
+  .chip{flex-shrink:0;border-radius:9999px;padding:9px 16px;font-weight:500;border:1px solid var(--border);background:var(--card);color:var(--text);}
+  .chip.active{background:var(--mint);color:#0D0F0E;border-color:var(--mint);}
+
+  /* empty state */
+  .empty-state{display:flex;flex-direction:column;align-items:center;text-align:center;padding:64px 20px;}
+  .empty-icon-circle{width:52px;height:52px;border-radius:9999px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;margin-bottom:12px;color:var(--text-muted);}
+
+  .page-title{font-size:22px;font-weight:600;margin-bottom:16px;}
+
+  /* screen header */
+  .screen-header{display:flex;align-items:center;gap:12px;padding:16px 20px;position:sticky;top:0;background:var(--bg);z-index:10;}
+  .header-title{flex:1;font-size:16px;font-weight:600;}
+
+  /* master detail */
+  .detail-head{display:flex;flex-direction:column;align-items:center;text-align:center;margin-bottom:20px;}
+  .detail-head .avatar-wrap{margin-bottom:12px;}
+  .detail-name{font-size:18px;font-weight:600;margin-bottom:2px;}
+  .verified-pill{display:flex;align-items:center;gap:5px;border-radius:9999px;padding:5px 12px;margin-top:10px;background:rgba(94,234,176,0.14);color:var(--mint);font-size:12px;font-weight:500;}
+
+  .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px;}
+  .stat-box{border-radius:18px;padding:12px 6px;text-align:center;background:var(--card);border:1px solid var(--border);}
+  .stat-value{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:16px;}
+  .stat-label{font-size:12px;color:var(--text-muted);}
+
+  .bio-text{font-size:14px;line-height:1.55;margin-bottom:24px;}
+  .subsection-title{font-size:14px;font-weight:600;margin-bottom:12px;}
+  .subsection-title.no-mb{margin-bottom:0;}
+
+  .portfolio-row{display:flex;gap:8px;overflow-x:auto;margin-bottom:24px;}
+  .portfolio-tile{flex-shrink:0;width:84px;height:84px;border-radius:16px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(94,234,176,0.18),rgba(251,191,36,0.14));color:var(--text-muted);}
+
+  .card{background:var(--card);border:1px solid var(--border);border-radius:20px;}
+  .review-card{padding:14px;}
+  .review-name{font-size:13px;font-weight:600;}
+  .review-text{font-size:13px;margin-top:4px;}
+
+  .sticky-footer{position:sticky;bottom:0;background:var(--bg);border-top:1px solid var(--border);padding:16px 20px;margin-top:12px;}
+  .price-big{font-size:16px;font-weight:600;}
+  .price-unit{font-size:12px;}
+
+  .btn-primary{width:100%;background:var(--mint);color:#0D0F0E;border-radius:16px;padding:14px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;text-align:center;}
+  .btn-primary:active{transform:scale(0.98);}
+  .btn-secondary{width:100%;background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:16px;padding:14px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;text-align:center;}
+
+  .mini-master-row{display:flex;align-items:center;gap:12px;padding:12px;margin:20px 0;}
+  .mini-master-name{font-size:14px;font-weight:600;}
+  .mini-master-cat{font-size:12px;}
+
+  .cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+  .cal-nav-btn{width:26px;height:26px;border-radius:9999px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;}
+  .cal-nav-btn:disabled{opacity:0.35;}
+  .cal-month-label{font-size:12px;font-weight:500;min-width:92px;text-align:center;}
+  .flip{display:inline-flex; transform:rotate(180deg);}
+
+  .cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:8px;}
+  .cal-weekday{font-size:12px;text-align:center;font-weight:500;}
+  .cal-days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:24px;}
+  .cal-day{aspect-ratio:1;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;color:var(--text);}
+  .cal-day.selected{background:var(--mint);color:#0D0F0E;font-weight:700;}
+  .cal-day.disabled{opacity:0.3;}
+  .cal-day.empty{visibility:hidden;}
+
+  .textarea-field{width:100%;border-radius:16px;padding:14px;background:var(--card);border:1px solid var(--border);margin-bottom:20px;resize:none;line-height:1.5;}
+  .error-text{color:var(--danger);font-size:12px;margin-top:8px;text-align:center;}
+
+  .done-wrap{display:flex;flex-direction:column;align-items:center;text-align:center;padding:56px 24px 24px;}
+  .done-icon-circle{width:72px;height:72px;border-radius:9999px;background:rgba(94,234,176,0.14);display:flex;align-items:center;justify-content:center;color:var(--mint);margin-bottom:20px;}
+  .done-title{font-size:20px;font-weight:600;margin-bottom:8px;}
+  .done-sub{font-size:14px;margin-bottom:24px;}
+  .done-summary{width:100%;text-align:left;padding:16px;margin-bottom:32px;}
+  .done-summary > div{font-size:14px;}
+
+  .booking-row{display:flex;align-items:center;gap:12px;padding:14px;}
+  .booking-time{font-size:12px;}
+  .status-badge{flex-shrink:0;font-size:12px;font-weight:600;border-radius:9999px;padding:5px 10px;}
+  .status-active{color:var(--mint);background:rgba(94,234,176,0.14);}
+  .status-done{color:var(--text-muted);background:var(--card-alt);}
+  .status-cancel{color:var(--amber);background:rgba(251,191,36,0.14);}
+
+  .chat-row{display:flex;align-items:center;gap:12px;padding:10px 4px;width:100%;text-align:left;}
+  .chat-preview{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:220px;}
+  .chat-time{font-size:11px;flex-shrink:0;}
+
+  .chat-thread-screen{display:flex;flex-direction:column;min-height:100%;}
+  .msg-list{flex:1;display:flex;flex-direction:column;gap:10px;padding-bottom:16px;}
+  .msg-row{display:flex;}
+  .msg-row.me{justify-content:flex-end;}
+  .msg-bubble{max-width:78%;border-radius:18px;padding:10px 14px;font-size:14px;line-height:1.4;}
+  .msg-bubble.them{background:var(--card);border:1px solid var(--border);}
+  .msg-bubble.me{background:var(--mint);color:#0D0F0E;}
+  .chat-input{flex:1;border-radius:9999px;padding:11px 16px;background:var(--card);border:1px solid var(--border);}
+  .send-btn{width:40px;height:40px;border-radius:9999px;background:var(--mint);color:#0D0F0E;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .send-btn:disabled{opacity:0.35;}
+
+  .profile-card{display:flex;align-items:center;gap:12px;padding:16px;margin-bottom:12px;}
+  .profile-avatar{width:56px;height:56px;border-radius:9999px;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:20px;color:#0D0F0E;background:linear-gradient(135deg,var(--mint),var(--mint-soft));}
+  .profile-name{font-size:15px;font-weight:600;}
+  .profile-phone{font-size:12px;}
+
+  .bookings-entry{display:flex;align-items:center;gap:12px;padding:14px 16px;margin-bottom:12px;width:100%;text-align:left;}
+  .bookings-entry-icon{width:38px;height:38px;border-radius:12px;background:rgba(94,234,176,0.14);color:var(--mint);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .bookings-entry-sub{font-size:12px;}
+
+  .pro-toggle-row{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;margin-bottom:12px;}
+  .settings-label{font-size:13px;font-weight:600;}
+  .pro-sub{font-size:11px;margin-top:2px;}
+
+  .settings-section-title{font-size:11px;font-weight:600;letter-spacing:.05em;margin:20px 0 8px 4px;}
+  .settings-block{padding:0 14px;}
+  .settings-row{width:100%;display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);text-align:left;}
+  .settings-row:last-child{border-bottom:none;}
+  .settings-row.danger{color:var(--danger);}
+  .lang-chip{border-radius:8px;padding:5px 9px;font-size:11px;font-weight:600;background:var(--card-alt);color:var(--text-muted);}
+  .lang-chip.active{background:var(--mint);color:#0D0F0E;}
+
+  .toggle{position:relative;flex-shrink:0;width:46px;height:26px;border-radius:9999px;background:#4b524d;transition:background .2s;}
+  .toggle.on{background:var(--mint);}
+  .toggle-knob{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:9999px;background:#fff;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,0.3);}
+  .toggle.on .toggle-knob{left:23px;}
+
+  /* nav dock */
+  .nav-dock{
+    display:flex; align-items:center; justify-content:space-around;
+    height:74px; margin:0 16px 14px; padding:0 6px;
+    border-radius:9999px;
+    background:rgba(18,20,18,0.94);
+    backdrop-filter:blur(16px);
+    border:1px solid rgba(255,255,255,0.06);
+    box-shadow:0 10px 30px rgba(0,0,0,0.4);
+    flex-shrink:0;
+  }
+  .nav-item{display:flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:9999px;color:#8B928C;}
+  .nav-icon-wrap{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:9999px;transition:all .25s ease;}
+  .nav-item.active{color:var(--mint);}
+  .nav-item.active .nav-icon-wrap{background:rgba(94,234,176,0.16);box-shadow:0 0 18px rgba(94,234,176,0.45);}
+  .nav-fab{
+    width:66px;height:66px;border-radius:9999px;background:var(--mint);
+    border:5px solid rgba(18,20,18,0.94);
+    display:flex;align-items:center;justify-content:center;color:#0D0F0E;
+    margin-top:-30px;
+    box-shadow:0 0 26px rgba(94,234,176,0.55), 0 8px 20px rgba(0,0,0,0.4);
+    transition:transform .15s ease;
+    flex-shrink:0;
+  }
+  .nav-fab:active{transform:scale(0.93);}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+'use strict';
+
+/* ---------------- Icons ---------------- */
+var ICONS = {
+  home: '<path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9.5"></path>',
+  star: '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>',
+  plus: '<line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line>',
+  'message-circle': '<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>',
+  user: '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle>',
+  search: '<circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>',
+  bell: '<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path>',
+  'chevron-right': '<polyline points="9 18 15 12 9 6"></polyline>',
+  'arrow-left': '<line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline>',
+  'map-pin': '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle>',
+  phone: '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"></path>',
+  send: '<line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>',
+  moon: '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>',
+  sun: '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>',
+  wrench: '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94z"></path>',
+  zap: '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>',
+  tool: '<path d="M15 12l-8.5 8.5a1.5 1.5 0 0 1-2-2L13 10"></path><path d="M20.91 11.7l-1.25-1.25c-.6-.6-.93-1.4-.93-2.25v-.86L16.01 5.6a5.56 5.56 0 0 0-3.94-1.64H9l.92.82A6.18 6.18 0 0 1 12 9.28v1.72l2 2h2.06a2.5 2.5 0 0 1 1.77.74l1.08 1.08"></path>',
+  settings: '<circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>',
+  sparkles: '<path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5z"></path><path d="M19 15l.7 2.1 2.1.7-2.1.7-.7 2.1-.7-2.1-2.1-.7 2.1-.7z"></path>',
+  truck: '<rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle>',
+  'check-circle': '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline>',
+  clock: '<circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>',
+  'log-out': '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line>',
+  shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>',
+  globe: '<circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>',
+  'help-circle': '<circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line>',
+  lock: '<rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path>',
+  calendar: '<rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>'
+};
+function icon(name, size){
+  size = size || 20;
+  return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + (ICONS[name] || '') + '</svg>';
+}
+function starIcon(filled, size){
+  size = size || 13;
+  var fill = filled ? 'var(--amber)' : 'none';
+  var stroke = filled ? 'var(--amber)' : '#6b716c';
+  return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="' + fill + '" stroke="' + stroke + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + ICONS.star + '</svg>';
+}
+
+/* ---------------- Data ---------------- */
+var CATEGORIES = [
+  { id: 'santexnik', label: 'Santexnik', icon: 'wrench', color: '#5EEAB0' },
+  { id: 'elektrik', label: 'Elektrik', icon: 'zap', color: '#FBBF24' },
+  { id: 'quruvchi', label: 'Quruvchi', icon: 'tool', color: '#5EEAB0' },
+  { id: 'tamirlash', label: "Ta'mirlash", icon: 'settings', color: '#FBBF24' },
+  { id: 'tozalash', label: 'Tozalash', icon: 'sparkles', color: '#5EEAB0' },
+  { id: 'kochirish', label: "Ko'chirish", icon: 'truck', color: '#FBBF24' }
+];
+
+var MASTERS = [
+  { id: 1, name: 'Bahodir Aliyev', category: 'santexnik', rating: 4.8, experience: 12, price: 80000, jobs: 214, verified: true, phone: '+998901234567',
+    bio: "Kvartira va ofislarda santexnika o'rnatish, quvur almashtirish va kran ta'mirlash bo'yicha 12 yillik tajribaga ega mutaxassis.",
+    reviews: [ { name: 'Jasur', rating: 5, text: 'Tez keldi, muammoni bir soatda hal qildi. Rahmat!' }, { name: 'Nodira', rating: 5, text: "Juda ozoda va aniq ishladi, albatta yana murojaat qilaman." } ] },
+  { id: 2, name: 'Sardor Karimov', category: 'elektrik', rating: 4.9, experience: 8, price: 90000, jobs: 178, verified: true, phone: '+998901234568',
+    bio: "Uy va ofislarda elektr simlarini tortish, rozetka o'rnatish va avariya holatlarini bartaraf etish bo'yicha ishlayman.",
+    reviews: [ { name: 'Kamola', rating: 5, text: 'Juda bilimdon, hammasini tushuntirib berdi.' }, { name: 'Elyor', rating: 4, text: 'Yaxshi ishladi, biroz kechikdi.' } ] },
+  { id: 3, name: 'Jasur Yusupov', category: 'quruvchi', rating: 4.6, experience: 15, price: 100000, jobs: 302, verified: true, phone: '+998901234569',
+    bio: "Devor ko'tarish, plitka yotqizish va umumiy qurilish ishlari bo'yicha 15 yillik amaliy tajriba.",
+    reviews: [ { name: 'Rustam', rating: 5, text: 'Sifatli va vaqtida bajardi.' }, { name: 'Malika', rating: 4, text: 'Yaxshi usta, narxi ham mos.' } ] },
+  { id: 4, name: 'Aziz Rahimov', category: 'tamirlash', rating: 4.7, experience: 6, price: 70000, jobs: 96, verified: false, phone: '+998901234570',
+    bio: "Mebel yig'ish, kichik ta'mirlash va uy jihozlarini o'rnatish bo'yicha xizmat ko'rsataman.",
+    reviews: [ { name: 'Diyora', rating: 5, text: "Mebelni juda tez va toza yig'ib berdi." } ] },
+  { id: 5, name: 'Dilnoza Ergasheva', category: 'tozalash', rating: 5.0, experience: 4, price: 60000, jobs: 140, verified: true, phone: '+998901234571',
+    bio: "Kvartira, ofis va ta'mirdan keyingi tozalash xizmatlarini ko'rsataman. Ekologik toza vositalar ishlatiladi.",
+    reviews: [ { name: 'Shahnoza', rating: 5, text: 'Uyim yiltirab qoldi, rahmat katta!' }, { name: 'Otabek', rating: 5, text: 'Juda puxta va tez ishladi.' } ] },
+  { id: 6, name: 'Otabek Nazarov', category: 'santexnik', rating: 4.5, experience: 9, price: 75000, jobs: 121, verified: false, phone: '+998901234572',
+    bio: "Isitish tizimlari, konditsioner va santexnika bo'yicha o'rnatish va ta'mirlash xizmatlari.",
+    reviews: [ { name: 'Nigora', rating: 4, text: "Yaxshi, lekin biroz kutishga to'g'ri keldi." } ] },
+  { id: 7, name: 'Farrux Toshpulatov', category: 'elektrik', rating: 4.8, experience: 10, price: 85000, jobs: 189, verified: true, phone: '+998901234573',
+    bio: "Sanoat va turar-joy binolarida elektr montaj ishlari, avtomatika va yoritish tizimlari.",
+    reviews: [ { name: 'Bekzod', rating: 5, text: 'Professional yondashuv, tavsiya qilaman.' } ] },
+  { id: 8, name: 'Malika Yoldosheva', category: 'tozalash', rating: 4.9, experience: 3, price: 55000, jobs: 88, verified: true, phone: '+998901234574',
+    bio: "Umumiy va chuqur tozalash xizmatlari, oyna yuvish va gilam tozalash bo'yicha ishlayman.",
+    reviews: [ { name: 'Zarina', rating: 5, text: 'Har doim vaqtida va sifatli.' } ] }
+];
+
+var UZ_MONTHS = ['Yanvar','Fevral','Mart','Aprel','May','Iyun','Iyul','Avgust','Sentabr','Oktabr','Noyabr','Dekabr'];
+var UZ_WEEKDAYS = ['Du','Se','Ch','Pa','Ju','Sh','Ya'];
+var TIME_SLOTS = ['09:00','11:00','13:00','15:00','17:00','19:00'];
+
+var INITIAL_BOOKINGS = [
+  { id: 1, masterId: 1, date: '2026-07-20', time: '15:00', address: 'Chilonzor tumani, 12-uy', status: 'faol' },
+  { id: 2, masterId: 5, date: '2026-07-10', time: '11:00', address: 'Yunusobod tumani, 45-uy', status: 'tugallangan' }
+];
+var INITIAL_CHATS = {
+  1: [
+    { id: 1, from: 'them', text: 'Salom! Sizga qanday yordam bera olaman?', time: '10:30' },
+    { id: 2, from: 'me', text: 'Salom, oshxonada kran oqib turibdi, kelib qarab bera olasizmi?', time: '10:32' },
+    { id: 3, from: 'them', text: 'Albatta, bugun soat 15:00 da kelaman.', time: '10:33' }
+  ],
+  2: [ { id: 1, from: 'them', text: "Assalomu alaykum, buyurtmangiz bo'yicha bog'landim.", time: '09:10' } ]
+};
+
+/* ---------------- Helpers ---------------- */
+function formatPrice(n){ return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
+function formatDateStr(d){ return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
+function getMonthGrid(offset){
+  var now = new Date();
+  var base = new Date(now.getFullYear(), now.getMonth()+offset, 1);
+  var year = base.getFullYear(), month = base.getMonth();
+  var startWeekday = (new Date(year, month, 1).getDay() + 6) % 7;
+  var daysInMonth = new Date(year, month+1, 0).getDate();
+  var cells = [];
+  for (var i=0;i<startWeekday;i++) cells.push(null);
+  for (var d=1; d<=daysInMonth; d++) cells.push(new Date(year, month, d));
+  return { cells: cells, label: UZ_MONTHS[month] + ' ' + year };
+}
+function isPast(date){ var t = new Date(); t.setHours(0,0,0,0); return date < t; }
+function isSameDate(a,b){ if(!a||!b) return false; return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate(); }
+function initials(name){ return name.split(' ').map(function(n){return n[0];}).slice(0,2).join('').toUpperCase(); }
+function escapeHtml(str){
+  return String(str==null?'':str)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function catLabel(id){ var c = CATEGORIES.filter(function(x){return x.id===id;})[0]; return c ? c.label : ''; }
+
+/* ---------------- State ---------------- */
+var state = {
+  isDark: true,
+  lang: 'UZ',
+  isProMode: false,
+  activeTab: 'home',
+  stack: [],
+  selectedCategory: 'barchasi',
+  searchQuery: '',
+  savedIds: new Set(),
+  bookings: INITIAL_BOOKINGS.slice(),
+  bookingsFilter: 'faol',
+  chats: JSON.parse(JSON.stringify(INITIAL_CHATS)),
+  chatInput: '',
+  bookingDate: null,
+  bookingTime: null,
+  bookingDesc: '',
+  bookingAddress: '',
+  bookingError: null,
+  monthOffset: 0,
+  lastBookingId: null
+};
+
+/* ---------------- Navigation ---------------- */
+function push(screen){ state.stack.push(screen); render(); }
+function pop(){ state.stack.pop(); render(); }
+function resetToTab(tab){ state.activeTab = tab; state.stack = []; render(); }
+function goTab(tab){ resetToTab(tab); }
+function currentScreen(){ return state.stack.length ? state.stack[state.stack.length-1] : null; }
+
+/* ---------------- Actions ---------------- */
+function setField(key, value){ state[key] = value; render(); }
+function toggleDark(){ state.isDark = !state.isDark; render(); }
+function setLang(l){ state.lang = l; render(); }
+function toggleProMode(){ state.isProMode = !state.isProMode; render(); }
+function selectCategory(id){ state.selectedCategory = id; render(); }
+function openBrowse(){ push({ type: 'browse' }); }
+function openMaster(id){ push({ type: 'master', id: id }); }
+function toggleSave(id, e){
+  if(e) e.stopPropagation();
+  if(state.savedIds.has(id)) state.savedIds.delete(id); else state.savedIds.add(id);
+  render();
+}
+function startBooking(id){
+  state.bookingDate = null; state.bookingTime = null; state.bookingDesc = '';
+  state.bookingAddress = ''; state.monthOffset = 0; state.bookingError = null;
+  push({ type: 'booking', id: id });
+}
+function selectBookingDate(y,m,d){ state.bookingDate = new Date(y,m,d); render(); }
+function selectBookingTime(t){ state.bookingTime = t; render(); }
+function changeMonth(delta){ state.monthOffset = Math.max(0, Math.min(2, state.monthOffset + delta)); render(); }
+function tryConfirmBooking(masterId){
+  if(!state.bookingDate || !state.bookingTime || !state.bookingAddress.trim()){
+    state.bookingError = "Iltimos, sana, vaqt va manzilni to'ldiring.";
+    render();
+    return;
+  }
+  state.bookingError = null;
+  var newId = state.bookings.length ? Math.max.apply(null, state.bookings.map(function(b){return b.id;})) + 1 : 1;
+  state.bookings.unshift({ id: newId, masterId: masterId, date: formatDateStr(state.bookingDate), time: state.bookingTime, address: state.bookingAddress, status: 'faol' });
+  state.lastBookingId = newId;
+  state.stack = [{ type: 'bookingDone', id: masterId }];
+  render();
+}
+function goToBookingsFromDone(){ state.activeTab = 'profile'; state.stack = [{ type: 'bookings' }]; render(); }
+function openBookingsList(){ push({ type: 'bookings' }); }
+function setBookingsFilter(f){ state.bookingsFilter = f; render(); }
+function ensureThread(masterId){
+  if(!state.chats[masterId]){ state.chats[masterId] = [{ id: 1, from: 'them', text: 'Assalomu alaykum! Qanday yordam kerak?', time: 'hozir' }]; }
+}
+function openChat(masterId){
+  ensureThread(masterId);
+  state.activeTab = 'chat';
+  state.stack = [{ type: 'chatThread', id: masterId }];
+  render();
+}
+function sendMessage(masterId){
+  var text = (state.chatInput || '').trim();
+  if(!text) return;
+  var thread = state.chats[masterId] || [];
+  thread.push({ id: thread.length + 1, from: 'me', text: text, time: 'hozir' });
+  state.chats[masterId] = thread;
+  state.chatInput = '';
+  render();
+  setTimeout(function(){
+    var t = state.chats[masterId] || [];
+    t.push({ id: t.length + 1, from: 'them', text: 'Xabaringiz uchun rahmat, tez orada javob beraman.', time: 'hozir' });
+    state.chats[masterId] = t;
+    render();
+  }, 1300);
+}
+
+/* ---------------- Small render helpers ---------------- */
+function screenHeader(title, rightHtml){
+  return '' +
+  '<div class="screen-header">' +
+    '<button class="icon-btn" onclick="pop()">' + icon('arrow-left',17) + '</button>' +
+    '<h1 class="font-display header-title">' + title + '</h1>' +
+    (rightHtml || '') +
+  '</div>';
+}
+function avatarHTML(m, size){
+  size = size || 60;
+  var r = size/2 - 3;
+  var c = 2*Math.PI*r;
+  var dash = c * (m.rating/5);
+  var cx = size/2, cy = size/2;
+  return '' +
+  '<div class="avatar-wrap" style="width:' + size + 'px;height:' + size + 'px;">' +
+    '<svg width="' + size + '" height="' + size + '" class="avatar-ring" viewBox="0 0 ' + size + ' ' + size + '">' +
+      '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" stroke="var(--ring-track)" stroke-width="3" fill="none"></circle>' +
+      '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" stroke="var(--mint)" stroke-width="3" fill="none" stroke-dasharray="' + dash + ' ' + c + '" stroke-linecap="round" transform="rotate(-90 ' + cx + ' ' + cy + ')"></circle>' +
+    '</svg>' +
+    '<div class="avatar-initials" style="inset:4px;font-size:' + Math.round(size*0.28) + 'px;">' + initials(m.name) + '</div>' +
+    (m.verified ? '<div class="avatar-badge">' + icon('wrench',9) + '</div>' : '') +
+  '</div>';
+}
+function saveButtonHTML(masterId, size){
+  size = size || 16;
+  var saved = state.savedIds.has(masterId);
+  return '<button class="save-btn" onclick="toggleSave(' + masterId + ', event)" aria-label="Saqlash">' + starIcon(saved, size) + '</button>';
+}
+function masterCardMiniHTML(m){
+  return '' +
+  '<button class="master-card-mini" onclick="openMaster(' + m.id + ')">' +
+    saveButtonHTML(m.id, 14) +
+    avatarHTML(m, 52) +
+    '<div class="mini-name">' + m.name + '</div>' +
+    '<div class="mini-cat text-muted">' + catLabel(m.category) + '</div>' +
+    '<div class="flex items-center gap-1">' + starIcon(true,12) + '<span class="mini-rating">' + m.rating + '</span></div>' +
+    '<div class="mini-price">' + formatPrice(m.price) + " so'm/soat</div>" +
+  '</button>';
+}
+function masterCardFullHTML(m){
+  return '' +
+  '<button class="master-card-full" onclick="openMaster(' + m.id + ')">' +
+    saveButtonHTML(m.id, 15) +
+    avatarHTML(m, 58) +
+    '<div class="full-card-info">' +
+      '<div class="full-name">' + m.name + '</div>' +
+      '<div class="full-meta text-muted">' + catLabel(m.category) + ' · ' + m.experience + ' yil tajriba</div>' +
+      '<div class="flex items-center gap-1 full-rating-row">' + starIcon(true,12) + '<span class="full-rating">' + m.rating + '</span><span class="text-muted full-jobs">(' + m.jobs + ' ish)</span></div>' +
+      '<div class="flex items-center gap-2 full-actions">' +
+        '<a href="tel:' + m.phone + '" class="mini-btn" onclick="event.stopPropagation()">' + icon('phone',12) + " Qo'ng'iroq</a>" +
+        '<button class="mini-btn accent" onclick="event.stopPropagation(); openChat(' + m.id + ')">' + icon('message-circle',12) + ' Xabar</button>' +
+      '</div>' +
+    '</div>' +
+    '<div class="full-price">' + formatPrice(m.price) + "<br>so'm/soat</div>" +
+  '</button>';
+}
+
+/* ---------------- Screens ---------------- */
+function renderHome(){
+  var recommended = MASTERS.filter(function(m){return m.rating>=4.7;}).slice(0,5);
+  return '' +
+  '<div class="screen px5 pt5">' +
+    '<div class="flex items-center justify-between mb5">' +
+      '<div class="flex items-center gap-2">' +
+        '<div class="logo-badge">' + icon('wrench',17) + '</div>' +
+        '<div class="font-display logo-text"><span class="mint-text">Usta</span> Zone</div>' +
+      '</div>' +
+      '<button class="icon-btn relative">' + icon('bell',17) + '<span class="notif-dot"></span></button>' +
+    '</div>' +
+
+    '<h2 class="font-display greet-title">Salom, Aziz!</h2>' +
+    '<p class="text-muted greet-sub">Bugun qanday yordam kerak?</p>' +
+
+    '<div class="search-bar">' + icon('search',17) +
+      '<input id="homeSearchInput" placeholder="Xizmat yoki mutaxassis qidirish" value="' + escapeHtml(state.searchQuery) + '" ' +
+      'oninput="setField(\'searchQuery\', this.value)" onkeydown="if(event.key===\'Enter\'){ openBrowse(); }" />' +
+    '</div>' +
+
+    '<div class="category-grid">' +
+      CATEGORIES.map(function(cat){
+        return '<button class="category-tile" onclick="selectCategory(\'' + cat.id + '\'); openBrowse();">' +
+          '<div class="category-icon-circle" style="background:' + cat.color + '22;color:' + cat.color + ';">' + icon(cat.icon,18) + '</div>' +
+          '<span class="category-label">' + cat.label + '</span>' +
+        '</button>';
+      }).join('') +
+    '</div>' +
+
+    '<div class="section-row">' +
+      '<h3 class="font-display section-title">Tavsiya etilgan ustalar</h3>' +
+      '<button class="see-all-link" onclick="openBrowse()">Barchasi ' + icon('chevron-right',13) + '</button>' +
+    '</div>' +
+    '<div class="scroll-row no-scrollbar">' + recommended.map(masterCardMiniHTML).join('') + '</div>' +
+  '</div>';
+}
+
+function renderBrowse(){
+  var q = (state.searchQuery || '').trim().toLowerCase();
+  var list = MASTERS.filter(function(m){
+    var catOk = state.selectedCategory === 'barchasi' || m.category === state.selectedCategory;
+    var qOk = !q || m.name.toLowerCase().indexOf(q) !== -1 || catLabel(m.category).toLowerCase().indexOf(q) !== -1;
+    return catOk && qOk;
+  });
+  return '' +
+  '<div class="screen">' +
+    screenHeader('Ustalar') +
+    '<div class="px5">' +
+      '<div class="search-bar mb4">' + icon('search',17) +
+        '<input id="browseSearchInput" value="' + escapeHtml(state.searchQuery) + '" placeholder="Ism yoki xizmat bo\'yicha qidirish" oninput="setField(\'searchQuery\', this.value)" />' +
+      '</div>' +
+      '<div class="chip-row no-scrollbar mb5">' +
+        '<button class="chip ' + (state.selectedCategory==='barchasi'?'active':'') + '" onclick="selectCategory(\'barchasi\')">Barchasi</button>' +
+        CATEGORIES.map(function(c){
+          return '<button class="chip ' + (state.selectedCategory===c.id?'active':'') + '" onclick="selectCategory(\'' + c.id + '\')">' + c.label + '</button>';
+        }).join('') +
+      '</div>' +
+      (list.length===0 ?
+        '<div class="empty-state"><div class="empty-icon-circle">' + icon('wrench',22) + '</div><p class="text-muted">Hech narsa topilmadi.<br>Boshqa toifa yoki so\'z bilan qidirib ko\'ring.</p></div>'
+        : '<div class="list-col">' + list.map(masterCardFullHTML).join('') + '</div>') +
+    '</div>' +
+  '</div>';
+}
+
+function renderSaved(){
+  var list = MASTERS.filter(function(m){ return state.savedIds.has(m.id); });
+  return '' +
+  '<div class="screen px5 pt5">' +
+    '<h1 class="font-display page-title">Saqlanganlar</h1>' +
+    (list.length===0 ?
+      '<div class="empty-state"><div class="empty-icon-circle">' + starIcon(false,22) + '</div><p class="text-muted">Hali hech kimni saqlamagansiz.<br>Usta kartasidagi yulduzchani bosing.</p></div>'
+      : '<div class="list-col">' + list.map(masterCardFullHTML).join('') + '</div>') +
+  '</div>';
+}
+
+function renderMasterDetail(id){
+  var m = MASTERS.filter(function(x){return x.id===id;})[0];
+  if(!m) return '';
+  return '' +
+  '<div class="screen">' +
+    screenHeader('Mutaxassis', '<button class="icon-btn" onclick="toggleSave(' + m.id + ')">' + starIcon(state.savedIds.has(m.id),18) + '</button>') +
+    '<div class="px5">' +
+      '<div class="detail-head">' +
+        avatarHTML(m, 84) +
+        '<h2 class="font-display detail-name">' + m.name + '</h2>' +
+        '<p class="text-muted">' + catLabel(m.category) + '</p>' +
+        (m.verified ? '<div class="verified-pill">' + icon('shield',12) + ' Tasdiqlangan usta</div>' : '') +
+      '</div>' +
+      '<div class="stat-grid">' +
+        '<div class="stat-box"><div class="stat-value">' + m.experience + ' yil</div><div class="stat-label">Tajriba</div></div>' +
+        '<div class="stat-box"><div class="stat-value">' + m.rating + '</div><div class="stat-label">Reyting</div></div>' +
+        '<div class="stat-box"><div class="stat-value">' + m.jobs + '</div><div class="stat-label">Ishlar</div></div>' +
+      '</div>' +
+      '<p class="bio-text">' + m.bio + '</p>' +
+      '<h3 class="font-display subsection-title">Ishlar namunasi</h3>' +
+      '<div class="portfolio-row no-scrollbar">' + [1,2,3,4].map(function(){ return '<div class="portfolio-tile">' + icon('wrench',18) + '</div>'; }).join('') + '</div>' +
+      '<h3 class="font-display subsection-title">Sharhlar</h3>' +
+      '<div class="list-col">' +
+        m.reviews.map(function(r){
+          var stars = [1,2,3,4,5].map(function(i){ return starIcon(i<=r.rating,12); }).join('');
+          return '<div class="card review-card"><div class="flex items-center justify-between mb1"><span class="review-name">' + r.name + '</span><div class="flex items-center gap-1">' + stars + '</div></div><p class="text-muted review-text">' + r.text + '</p></div>';
+        }).join('') +
+      '</div>' +
+    '</div>' +
+    '<div class="sticky-footer flex items-center gap-3">' +
+      '<div><div class="font-display price-big">' + formatPrice(m.price) + " so'm</div><div class=\"text-muted price-unit\">soatiga</div></div>" +
+      '<button class="btn-primary flex-1" onclick="startBooking(' + m.id + ')">Band qilish</button>' +
+    '</div>' +
+  '</div>';
+}
+
+function renderBooking(id){
+  var m = MASTERS.filter(function(x){return x.id===id;})[0];
+  if(!m) return '';
+  var grid = getMonthGrid(state.monthOffset);
+  var days = grid.cells.map(function(d){
+    if(!d) return '<div class="cal-day empty"></div>';
+    var disabled = isPast(d);
+    var selected = isSameDate(d, state.bookingDate);
+    return '<button class="cal-day ' + (selected?'selected':'') + ' ' + (disabled?'disabled':'') + '" ' + (disabled?'disabled':'') +
+      ' onclick="selectBookingDate(' + d.getFullYear() + ',' + d.getMonth() + ',' + d.getDate() + ')">' + d.getDate() + '</button>';
+  }).join('');
+  return '' +
+  '<div class="screen">' +
+    screenHeader('Band qilish') +
+    '<div class="px5">' +
+      '<div class="card mini-master-row">' + avatarHTML(m,44) +
+        '<div><div class="mini-master-name">' + m.name + '</div><div class="text-muted mini-master-cat">' + catLabel(m.category) + '</div></div>' +
+      '</div>' +
+      '<div class="cal-header">' +
+        '<h3 class="font-display subsection-title no-mb">Sanani tanlang</h3>' +
+        '<div class="flex items-center gap-2">' +
+          '<button class="cal-nav-btn" ' + (state.monthOffset===0?'disabled':'') + ' onclick="changeMonth(-1)">' + icon('arrow-left',13) + '</button>' +
+          '<span class="cal-month-label text-muted">' + grid.label + '</span>' +
+          '<button class="cal-nav-btn" ' + (state.monthOffset===2?'disabled':'') + ' onclick="changeMonth(1)"><span class="flip">' + icon('arrow-left',13) + '</span></button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="cal-weekdays">' + UZ_WEEKDAYS.map(function(d){ return '<div class="cal-weekday text-muted">' + d + '</div>'; }).join('') + '</div>' +
+      '<div class="cal-days">' + days + '</div>' +
+      '<h3 class="font-display subsection-title">Vaqtni tanlang</h3>' +
+      '<div class="chip-row wrap mb5">' + TIME_SLOTS.map(function(t){ return '<button class="chip ' + (state.bookingTime===t?'active':'') + '" onclick="selectBookingTime(\'' + t + '\')">' + t + '</button>'; }).join('') + '</div>' +
+      '<h3 class="font-display subsection-title">Muammo tavsifi</h3>' +
+      '<textarea id="bookingDescField" rows="3" class="textarea-field" placeholder="Nima yordam kerakligini qisqacha yozing..." oninput="setField(\'bookingDesc\', this.value)">' + escapeHtml(state.bookingDesc) + '</textarea>' +
+      '<h3 class="font-display subsection-title">Manzil</h3>' +
+      '<div class="search-bar mb4">' + icon('map-pin',16) +
+        '<input id="bookingAddressField" value="' + escapeHtml(state.bookingAddress) + '" placeholder="Tuman, ko\'cha, uy raqami" oninput="setField(\'bookingAddress\', this.value)" />' +
+      '</div>' +
+    '</div>' +
+    '<div class="sticky-footer">' +
+      '<button class="btn-primary" onclick="tryConfirmBooking(' + m.id + ')">Tasdiqlash</button>' +
+      (state.bookingError ? '<p class="error-text">' + state.bookingError + '</p>' : '') +
+    '</div>' +
+  '</div>';
+}
+
+function renderBookingDone(id){
+  var m = MASTERS.filter(function(x){return x.id===id;})[0];
+  var b = state.bookings.filter(function(x){return x.id===state.lastBookingId;})[0];
+  if(!m) return '';
+  return '' +
+  '<div class="screen done-wrap">' +
+    '<div class="done-icon-circle">' + icon('check-circle',36) + '</div>' +
+    '<h2 class="font-display done-title">Band qilindi!</h2>' +
+    '<p class="text-muted done-sub">' + m.name + ' siz bilan tez orada bog\'lanadi.</p>' +
+    (b ? '<div class="card done-summary"><div class="flex items-center gap-2 mb2">' + icon('calendar',14) + '<span>' + b.date + ' · ' + b.time + '</span></div><div class="flex items-center gap-2">' + icon('map-pin',14) + '<span>' + b.address + '</span></div></div>' : '') +
+    '<button class="btn-primary mb3" onclick="goToBookingsFromDone()">Bronlarimni ko\'rish</button>' +
+    '<button class="btn-secondary" onclick="resetToTab(\'home\')">Bosh sahifaga qaytish</button>' +
+  '</div>';
+}
+
+function renderBookingsList(){
+  var STATUS_LABEL = { faol: 'Faol', tugallangan: 'Tugallangan', bekor: 'Bekor qilingan' };
+  var list = state.bookings.filter(function(b){ return b.status === state.bookingsFilter; });
+  var rows = list.map(function(b){
+    var m = MASTERS.filter(function(x){return x.id===b.masterId;})[0];
+    if(!m) return '';
+    var statusClass = b.status==='faol' ? 'status-active' : (b.status==='bekor' ? 'status-cancel' : 'status-done');
+    return '<div class="card booking-row">' + avatarHTML(m,48) +
+      '<div class="flex-1 min-w0"><div class="full-name">' + m.name + '</div><div class="text-muted full-meta">' + catLabel(m.category) + '</div>' +
+      '<div class="flex items-center gap-1 mt1">' + icon('clock',11) + '<span class="text-muted booking-time">' + b.date + ' · ' + b.time + '</span></div></div>' +
+      '<span class="status-badge ' + statusClass + '">' + STATUS_LABEL[b.status] + '</span></div>';
+  }).join('');
+  return '' +
+  '<div class="screen">' +
+    screenHeader('Bronlarim') +
+    '<div class="px5">' +
+      '<div class="chip-row mb5">' + Object.keys(STATUS_LABEL).map(function(s){
+        return '<button class="chip ' + (state.bookingsFilter===s?'active':'') + '" onclick="setBookingsFilter(\'' + s + '\')">' + STATUS_LABEL[s] + '</button>';
+      }).join('') + '</div>' +
+      (list.length===0 ?
+        '<div class="empty-state"><div class="empty-icon-circle">' + icon('calendar',22) + '</div><p class="text-muted">Bu bo\'limda hozircha bron yo\'q.</p></div>'
+        : '<div class="list-col">' + rows + '</div>') +
+    '</div>' +
+  '</div>';
+}
+
+function renderChatTab(){
+  var ids = Object.keys(state.chats).map(Number);
+  var rows = ids.map(function(id){
+    var m = MASTERS.filter(function(x){return x.id===id;})[0];
+    var thread = state.chats[id];
+    var last = thread[thread.length-1];
+    if(!m || !last) return '';
+    return '<button class="chat-row" onclick="openChat(' + id + ')">' + avatarHTML(m,48) +
+      '<div class="flex-1 min-w0"><div class="full-name">' + m.name + '</div><div class="text-muted chat-preview">' + (last.from==='me'?'Siz: ':'') + escapeHtml(last.text) + '</div></div>' +
+      '<span class="text-muted chat-time">' + last.time + '</span></button>';
+  }).join('');
+  return '' +
+  '<div class="screen px5 pt5">' +
+    '<h1 class="font-display page-title">Xabarlar</h1>' +
+    (ids.length===0 ?
+      '<div class="empty-state"><div class="empty-icon-circle">' + icon('message-circle',22) + '</div><p class="text-muted">Hali suhbatlar yo\'q. Usta profilidan "Xabar" tugmasini bosing.</p></div>'
+      : '<div class="list-col tight">' + rows + '</div>') +
+  '</div>';
+}
+
+function renderChatThread(id){
+  var m = MASTERS.filter(function(x){return x.id===id;})[0];
+  if(!m) return '';
+  var thread = state.chats[id] || [];
+  var canSend = (state.chatInput || '').trim().length > 0;
+  var msgs = thread.map(function(msg){
+    return '<div class="msg-row ' + (msg.from==='me'?'me':'') + '"><div class="msg-bubble ' + (msg.from==='me'?'me':'them') + '">' + escapeHtml(msg.text) + '</div></div>';
+  }).join('');
+  return '' +
+  '<div class="screen chat-thread-screen">' +
+    screenHeader(m.name) +
+    '<div class="px5 msg-list">' + msgs + '</div>' +
+    '<div class="sticky-footer flex items-center gap-2">' +
+      '<input id="chatInputField" value="' + escapeHtml(state.chatInput) + '" placeholder="Xabar yozing..." class="chat-input" ' +
+      'oninput="setField(\'chatInput\', this.value)" onkeydown="if(event.key===\'Enter\'){ sendMessage(' + id + '); }" />' +
+      '<button class="send-btn" ' + (canSend?'':'disabled') + ' onclick="sendMessage(' + id + ')">' + icon('send',16) + '</button>' +
+    '</div>' +
+  '</div>';
+}
+
+function renderProfile(){
+  var activeCount = state.bookings.filter(function(b){return b.status==='faol';}).length;
+  return '' +
+  '<div class="screen px5 pt5">' +
+    '<h1 class="font-display page-title">Profil</h1>' +
+    '<div class="card profile-card"><div class="profile-avatar">AQ</div><div><div class="profile-name">Aziz Qodirov</div><div class="text-muted profile-phone">+998 90 123 45 67</div></div></div>' +
+    '<button class="card bookings-entry" onclick="openBookingsList()">' +
+      '<div class="bookings-entry-icon">' + icon('calendar',18) + '</div>' +
+      '<div class="flex-1"><div class="settings-label">Mening bronlarim</div><div class="text-muted bookings-entry-sub">' + activeCount + ' ta faol bron</div></div>' +
+      icon('chevron-right',16) +
+    '</button>' +
+    '<div class="card pro-toggle-row"><div><div class="settings-label">Usta sifatida ishlayman</div><div class="text-muted pro-sub">Yoqilsa, siz ham e\'lon joylay olasiz</div></div>' +
+      '<button class="toggle ' + (state.isProMode?'on':'') + '" onclick="toggleProMode()"><span class="toggle-knob"></span></button></div>' +
+    (state.isProMode ?
+      '<div class="stat-grid"><div class="stat-box"><div class="stat-value">12</div><div class="stat-label">E\'lonlar</div></div>' +
+      '<div class="stat-box"><div class="stat-value">3.4K</div><div class="stat-label">Ko\'rishlar</div></div>' +
+      '<div class="stat-box"><div class="stat-value">4.8</div><div class="stat-label">Reyting</div></div></div>' : '') +
+    '<div class="settings-section-title text-muted">SOZLAMALAR</div>' +
+    '<div class="card settings-block">' +
+      '<button class="settings-row" onclick="toggleDark()">' + icon(state.isDark?'sun':'moon',18) +
+        '<span class="flex-1 settings-label">Ko\'rinish rejimi</span><span class="toggle ' + (state.isDark?'on':'') + '"><span class="toggle-knob"></span></span></button>' +
+      '<div class="settings-row">' + icon('globe',18) + '<span class="flex-1 settings-label">Til</span><div class="flex gap-1">' +
+        ['UZ','RU','EN'].map(function(l){ return '<button class="lang-chip ' + (state.lang===l?'active':'') + '" onclick="setLang(\'' + l + '\')">' + l + '</button>'; }).join('') +
+      '</div></div>' +
+      '<button class="settings-row">' + icon('bell',18) + '<span class="flex-1 settings-label">Bildirishnomalar</span>' + icon('chevron-right',16) + '</button>' +
+      '<button class="settings-row">' + icon('lock',18) + '<span class="flex-1 settings-label">Maxfiylik</span>' + icon('chevron-right',16) + '</button>' +
+      '<button class="settings-row">' + icon('help-circle',18) + '<span class="flex-1 settings-label">Yordam</span>' + icon('chevron-right',16) + '</button>' +
+      '<button class="settings-row danger">' + icon('log-out',18) + '<span class="settings-label">Chiqish</span></button>' +
+    '</div>' +
+  '</div>';
+}
+
+function renderNav(){
+  return '' +
+  '<div class="nav-dock">' +
+    '<button class="nav-item ' + (state.activeTab==='home'?'active':'') + '" onclick="goTab(\'home\')"><span class="nav-icon-wrap">' + icon('home',22) + '</span></button>' +
+    '<button class="nav-item ' + (state.activeTab==='saved'?'active':'') + '" onclick="goTab(\'saved\')"><span class="nav-icon-wrap">' + icon('star',22) + '</span></button>' +
+    '<button class="nav-fab" onclick="openBrowse()" aria-label="Ustalarni topish">' + icon('plus',26) + '</button>' +
+    '<button class="nav-item ' + (state.activeTab==='chat'?'active':'') + '" onclick="goTab(\'chat\')"><span class="nav-icon-wrap">' + icon('message-circle',22) + '</span></button>' +
+    '<button class="nav-item ' + (state.activeTab==='profile'?'active':'') + '" onclick="goTab(\'profile\')"><span class="nav-icon-wrap">' + icon('user',22) + '</span></button>' +
+  '</div>';
+}
+
+function renderSubScreen(s){
+  if(s.type==='browse') return renderBrowse();
+  if(s.type==='master') return renderMasterDetail(s.id);
+  if(s.type==='booking') return renderBooking(s.id);
+  if(s.type==='bookingDone') return renderBookingDone(s.id);
+  if(s.type==='chatThread') return renderChatThread(s.id);
+  if(s.type==='bookings') return renderBookingsList();
+  return '';
+}
+function renderMainTab(){
+  if(state.activeTab==='home') return renderHome();
+  if(state.activeTab==='saved') return renderSaved();
+  if(state.activeTab==='chat') return renderChatTab();
+  if(state.activeTab==='profile') return renderProfile();
+  return '';
+}
+
+function renderApp(){
+  document.documentElement.classList.toggle('dark', state.isDark);
+  var screen = currentScreen();
+  return '' +
+  '<div class="app-shell">' +
+    '<div class="content-area no-scrollbar" id="contentArea">' + (screen ? renderSubScreen(screen) : renderMainTab()) + '</div>' +
+    (!screen ? renderNav() : '') +
+  '</div>';
+}
+
+function render(){
+  var active = document.activeElement;
+  var activeId = active && active.id;
+  var selStart = null, selEnd = null;
+  if(active && typeof active.selectionStart === 'number'){ selStart = active.selectionStart; selEnd = active.selectionEnd; }
+  document.getElementById('app').innerHTML = renderApp();
+  if(activeId){
+    var el = document.getElementById(activeId);
+    if(el){
+      el.focus();
+      if(selStart != null && el.setSelectionRange){
+        try{ el.setSelectionRange(selStart, selEnd); }catch(err){}
+      }
+    }
+  }
+}
+
+render();
+</script>
+</body>
+</html>
      olib tashlandi. Yuqorida HTML/JS ichida ishlatilgan har bir klass
      shu yerda qo'lda CSS sifatida yozilgan (attribute selektor orqali,
      shunda "w-[168px]" kabi maxsus belgili nomlar ham ishlaydi).
